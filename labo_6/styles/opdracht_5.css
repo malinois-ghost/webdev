@@ -1,0 +1,8 @@
+a::before {
+    content: "";
+    background-image: url("../images/png-clipart-computer-icons-hyperlink-symbol-delete-button-miscellaneous-angle.png");
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    display: inline-block;
+}
