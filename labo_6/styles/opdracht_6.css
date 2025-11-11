@@ -1,0 +1,27 @@
+.checklist{
+    list-style-type: none;
+}
+
+.checklist li::before{
+    content: "";
+    background-image: url("../images/png-transparent-checkbox-others-miscellaneous-cdr-angle-158644303.png");
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    display: inline-block;
+    margin-right: 5px;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
+
+.checklist .checked::before {
+    content: "";
+    background-image: url("../images/checked-checkbox-icon-checkbox-ico-115632629493xkxpf63d8-2971640318.png");
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    display: inline-block;
+    margin-right: 5px;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}

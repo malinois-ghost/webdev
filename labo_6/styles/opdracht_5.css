@@ -5,4 +5,7 @@ a::before {
     height: 16px;
     background-size: contain;
     display: inline-block;
+    margin-right: 5px;
+    background-repeat: no-repeat;
+    vertical-align: middle;
 }
