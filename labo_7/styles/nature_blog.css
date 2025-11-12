@@ -35,13 +35,17 @@ article{
 }
 
 header{
-    text-decoration: underline;
+    text-decoration: underline #444444;
     font-weight: bold;
 }
 
 h2, article, nav, article > footer, article > p{
     padding-left: 10px;
     font-family: verdana, arial, system-ui;
+}
+
+h2{
+    color: #444444;
 }
 
 article > footer{
