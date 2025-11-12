@@ -24,7 +24,7 @@ table, th, td{
     border-collapse: collapse;
 }
 
-th, td{
+th, td, section, h2, table, header{
     text-align: center;
 }
 
@@ -32,13 +32,8 @@ li{
     list-style-type: none;
 }
 
-section{
+section, header{
     border-bottom: 10px solid white;
-    text-align: center;
-}
-
-h2{
-    text-align: center;
 }
 
 .profile {
@@ -60,7 +55,14 @@ h2{
 }
 
 table{
-    text-align: center;
+    width: 45%;
     margin: auto;
-    width: 60%;
+}
+
+.bottom{
+    margin-bottom: 20px;
+}
+
+.top{
+    margin-top: 10px;
 }
