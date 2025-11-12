@@ -3,12 +3,14 @@ nav>a{
     text-decoration: none;
 
 }
+
 nav{
     color: black;
     background-color: #444444;
     margin-top: 0;
     margin-bottom: 5px;
 }
+
 h1{
     background-image: url("../images/header.jpg");
     background-size: cover;
@@ -20,27 +22,33 @@ h1{
     font-weight: bold;
     font-size: 40px;
 }
+
 body{
     width: 95%;
     margin: 0 auto;
 
 }
+
 header{
     text-decoration: underline;
     font-weight: bold;
 }
+
 article{
     background-color: lightgray;
     padding-top:15px;
 }
+
 h2, article, nav{
     padding-left: 10px;
     font-family: verdana, arial, sans-serif;
 }
+
 article>footer{
     margin-bottom: 5px;
-
+    padding-bottom: 5px;
 }
+
 footer{
     padding-left: 0
 }
