@@ -1,0 +1,23 @@
+.black_flag {
+    width: 300px;
+    height: 174px;
+}
+
+.jaws{
+    width: 413px;
+    height: 500px;
+}
+
+.portrait{
+    width: 266px;
+    height: 400px;
+}
+
+table, th, td{
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td{
+    text-align: center;
+}
