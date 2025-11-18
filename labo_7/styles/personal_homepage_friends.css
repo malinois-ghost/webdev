@@ -1,0 +1,91 @@
+.black_flag {
+    width: 300px;
+    height: 174px;
+}
+
+.jaws {
+    width: 413px;
+    height: 500px;
+}
+
+.portrait {
+    width: 266px;
+    height: 400px;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: center;
+}
+
+div table {
+    border-collapse: collapse;
+    text-align: left;
+    width: 100%;
+}
+
+div {
+    font: normal 12px/150% Georgia, Times New Roman, Times, serif;
+    background: #fff;
+    overflow: hidden;
+    border: 2px solid #652299;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+div table td, div table th {
+    padding: 2px 1px;
+}
+
+div table thead th {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#652299', endColorstr='#4D1A75');
+    background-color: #652299;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    border-left: 1px solid #714399;
+}
+
+div table thead th:first-child {
+    border: none;
+}
+
+div table tbody td {
+    color: #4D1A75;
+    border-left: 3px solid #E7BDFF;
+    font-size: 12px;
+    border-bottom: 3px solid #E1EEF4;
+    font-weight: normal;
+}
+
+div table tbody .alt td {
+    background: #F4E3FF;
+    color: #4D1A75;
+}
+
+div table tbody td:first-child {
+    border-left: none;
+}
+
+div table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+div table tfoot td div {
+    border-top: 1px solid #652299;
+    background: #F4E3FF;
+}
+
+div table tfoot td {
+    padding: 0;
+    font-size: 12px
+}
+
+div table tfoot td div {
+    padding: 5px;
+}
