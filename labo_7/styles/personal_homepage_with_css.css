@@ -24,7 +24,7 @@ table, th, td{
     border-collapse: collapse;
 }
 
-th, td, section, h2, table, header{
+th, td, section, h2, table, header, p, a{
     text-align: center;
 }
 
