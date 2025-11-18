@@ -24,7 +24,7 @@ table, th, td{
     border-collapse: collapse;
 }
 
-th, td, section, h2, table, header, p, a{
+th, td, h2, header, p, a, section{
     text-align: center;
 }
 
@@ -57,6 +57,11 @@ section, header{
 table{
     width: 45%;
     margin: auto;
+}
+
+section ul {
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .bottom{
