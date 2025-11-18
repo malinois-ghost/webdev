@@ -77,7 +77,7 @@ div table tbody tr:last-child td {
 }
 
 div table tfoot td div {
-    border-top: 1px solid #652299;
+    border: 1px solid #652299;
     background: #F4E3FF;
 }
 
