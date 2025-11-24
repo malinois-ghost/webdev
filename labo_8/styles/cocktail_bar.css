@@ -1,4 +1,54 @@
-body{
+body {
     width: 95%;
     margin: 0 auto;
+    font-family: verdana, helvetica, arial, system-ui;
+}
+
+h1, h2 {
+    color: #007e7e;
+}
+
+h1 {
+    font-size: 150%;
+}
+
+h2 {
+    font-size: 130%;
+}
+
+#elixirs h1 {
+    color: black;
+}
+
+#elixirs h2 {
+    color: red;
+}
+
+#elixirs a:hover {
+    background-color: saddlebrown;
+}
+
+#elixirs {
+    padding: 20px;
+    float: right;
+    width: 30%;
+    border: #007e7e 2px solid;
+    text-align: center;
+}
+
+#content{
+    width: 70%;
+}
+
+footer {
+    font-size: 50%;
+
+}
+
+.color{
+    color:  #444444;
+    margin: 30px;
+    padding: 20px;
+    background-color: #a7cece;
+    border: white 2px dotted;
 }
