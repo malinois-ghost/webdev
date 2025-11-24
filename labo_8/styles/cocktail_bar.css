@@ -29,7 +29,7 @@ h2 {
 }
 
 #elixirs {
-    padding: 20px;
+    padding: 5px;
     float: right;
     width: 30%;
     border: #007e7e 2px solid;
@@ -42,7 +42,7 @@ h2 {
 
 footer {
     font-size: 50%;
-
+    text-align: center;
 }
 
 .color{
