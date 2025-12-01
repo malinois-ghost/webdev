@@ -23,7 +23,19 @@ header h1{
 }
 
 header p{
+    margin-top: 50px;
     font-size: 240%;
+}
+
+header figure{
+    width: 25%;
+    margin-left: 718px;
+    margin-top: -152px;
+}
+
+header img{
+    margin-right: 250px;
+    margin-bottom: 60px;
 }
 
 .nieuws{
