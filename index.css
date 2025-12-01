@@ -10,13 +10,13 @@ h1{
     color: #869AAD;
 }
 
-.list-container{
+div{
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
 }
 
-.list-container ul{
+div ul{
     background-color: #869AAD;
     padding: 10px 15px;
     border-radius: 6px;
