@@ -1,0 +1,124 @@
+body{
+    width: 95%;
+    margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header{
+    height: 200px;
+    background-image: url("../images/airbus/bgsky3.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+header h1, header p{
+    text-align: center;
+    color: darkblue;
+    font-weight: bold;
+}
+
+header h1{
+    font-size: 300%;
+    font-style: italic;
+}
+
+header p{
+    font-size: 240%;
+}
+
+.nieuws{
+    float: right;
+    width: 25%;
+    background-color: #dddddd;
+    border: 1px solid #999999;
+}
+
+.nieuws p{
+    color: #666666;
+    font-size: 90%;
+    margin: auto 10px;
+}
+
+.nieuws h3{
+    color: white;
+    background-color: blue;
+    text-align: center;
+    font-size: 120%;
+}
+
+main{
+    width: 75%;
+    margin-right: 10px;
+}
+
+.introduction{
+    background-color: white;
+    color: black;
+
+}
+
+.introduction span{
+    color: blue;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.introduction p{
+    margin: 20px 30px 20px 0;
+    text-align: justify;
+    text-align-last: justify;
+}
+
+main > figure{
+    margin: 20px 20px 0 20px;
+    float: left;
+}
+
+.galerij{
+    background-color: #999999;
+}
+
+.galerij figure{
+    display: inline-block;
+    width: 180px;
+    height: 180px;
+    padding: 10px;
+    background-color: white;
+    border: 1px dashed #999999;
+    margin: 20px;
+}
+
+.foto-grid{
+    font-size: 0;
+    text-align: center;
+}
+
+footer{
+    background-color: #666666;
+    font-size: 2em;
+}
+
+footer li, li a{
+    color: white;
+}
+
+li a:hover{
+    color: red;
+}
+
+footer nav{
+    display: inline-block;
+    margin-left: 120px;
+}
+
+footer div{
+    background-color: white;
+    color: black;
+    text-align: center;
+}
+
+.hidden-heading{
+    display: none;
+    overflow: hidden;
+    font-size: 0;
+}
