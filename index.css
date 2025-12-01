@@ -1,0 +1,33 @@
+body{
+    margin: 0 auto;
+    width: 95%;
+    background-color: #2F3E46;
+    font-family: Arial, sans-serif;
+}
+
+h1{
+    text-align: center;
+    color: #869AAD;
+}
+
+.list-container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.list-container ul{
+    background-color: #869AAD;
+    padding: 10px 15px;
+    border-radius: 6px;
+    list-style: none;
+    min-width: 200px;
+}
+
+h2{
+    margin-top: 0;
+}
+
+a:hover{
+    color: red;
+}
