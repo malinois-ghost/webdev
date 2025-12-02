@@ -28,9 +28,11 @@ header p{
 }
 
 header figure{
+    float: none;
+    z-index: 10;
     width: 25%;
-    margin-left: 52%;
-    margin-top: -10.8%
+    margin-left: 51.5%;
+    margin-top: -9.5%
 }
 
 header img{
