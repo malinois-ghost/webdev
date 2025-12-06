@@ -49,6 +49,24 @@ figcaption{
     }
 }
 
-@media screen and (786px <= width < 992px){
+@media screen and (width >= 786px){
+    *{
+        box-sizing: border-box;
+    }
 
+    body{
+        margin: 0 1%;
+        background-color: #ccccfe;
+    }
+
+    figure{
+        display: inline-block;
+        width: calc(50% - 5px);
+    }
+
+    img{
+        width: 100%;
+        height: auto;
+        display: block;
+    }
 }
