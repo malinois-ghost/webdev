@@ -70,3 +70,25 @@ figcaption{
         display: block;
     }
 }
+
+@media screen and (width >= 992px){
+    *{
+        box-sizing: border-box;
+    }
+
+    body{
+        margin: 0 1%;
+        background-color: #ccfecb;
+    }
+
+    figure{
+        display: inline-block;
+        width: calc(33% - 5px);
+    }
+
+    img{
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+}
