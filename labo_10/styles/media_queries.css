@@ -31,13 +31,12 @@ figcaption{
 }
 
 @media screen and (max-width: 786px){
-    figure {
-        width: 100%;
+    figure{
         float: none;
         box-sizing: border-box;
     }
 
-    img {
+    img{
         height: auto;
         display: block;
     }
@@ -45,4 +44,8 @@ figcaption{
     figcaption{
         text-align: left;
     }
+}
+
+@media screen and (max-width: 786px){
+
 }
