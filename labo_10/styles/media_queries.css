@@ -34,13 +34,15 @@ figcaption{
     figure {
         width: 100%;
         float: none;
-        margin-right: 0;
         box-sizing: border-box;
     }
 
     img {
-        max-width: 100%;
         height: auto;
         display: block;
+    }
+
+    figcaption{
+        text-align: left;
     }
 }
