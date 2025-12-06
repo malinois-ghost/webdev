@@ -40,10 +40,6 @@ figcaption{
         height: auto;
         display: block;
     }
-
-    figcaption{
-        text-align: left;
-    }
 }
 
 @media screen and (max-width: 786px){
