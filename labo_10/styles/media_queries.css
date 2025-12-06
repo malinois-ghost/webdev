@@ -84,7 +84,7 @@ figcaption{
 
     figure{
         display: inline-block;
-        width: calc(33% - 5px);
+        width: calc(33% - 1px);
     }
 
     img{
