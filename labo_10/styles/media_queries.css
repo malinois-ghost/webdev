@@ -31,9 +31,16 @@ figcaption{
 }
 
 @media screen and (max-width: 786px){
-    figure{
-        float: none;
+    *{
         box-sizing: border-box;
+    }
+
+    body{
+        margin: 0 1%;
+    }
+
+    figure{
+        width: 100%;
     }
 
     img{
