@@ -30,7 +30,7 @@ figcaption{
     font-size: .8em;
 }
 
-@media screen and (max-width: 786px){
+@media screen and (width < 786px){
     *{
         box-sizing: border-box;
     }
@@ -49,6 +49,6 @@ figcaption{
     }
 }
 
-@media screen and (max-width: 786px){
+@media screen and (786px <= width < 992px){
 
 }
