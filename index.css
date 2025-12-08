@@ -14,7 +14,6 @@ div{
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: center;
 }
 
 div ul{
@@ -23,7 +22,6 @@ div ul{
     border-radius: 6px;
     list-style: none;
     min-width: 200px;
-    flex-basis: 100%;
 }
 
 h2{
@@ -32,19 +30,4 @@ h2{
 
 a:hover{
     color: red;
-}
-
-@media (min-width: 768px){
-    div{
-        justify-content: flex-start;
-    }
-    div ul{
-        flex-basis: calc(33.33% - 14px);
-    }
-}
-
-@media (min-width: 1200px){
-    div ul{
-        flex-basis: calc(20% - 16px);
-    }
 }
