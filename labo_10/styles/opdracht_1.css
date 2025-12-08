@@ -3,7 +3,13 @@ body{
     margin: 0 auto;
 }
 
-div{
+.row > div{
     height: 150px;
-    margin-bottom: var(--bs-gutter-x, 0.75rem);
+    background-clip: content-box;
+    background-color: #dbdfe5;
+    font-size: 0;
+}
+
+.row > .dark{
+    background-color: #abb1b8;
 }
