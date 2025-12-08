@@ -13,3 +13,7 @@ body{
 .row > .dark{
     background-color: #abb1b8;
 }
+
+footer{
+    text-align: center;
+}
