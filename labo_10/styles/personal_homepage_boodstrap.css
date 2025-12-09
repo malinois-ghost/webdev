@@ -26,3 +26,7 @@ table, td, th {
 footer{
     text-align: center;
 }
+
+.ul_hobbies{
+    max-width: 600px;
+}
