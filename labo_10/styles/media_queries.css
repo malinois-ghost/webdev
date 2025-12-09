@@ -1,27 +1,27 @@
-*{
+* {
     box-sizing: border-box;
 }
 
-body{
+body {
     font: 1.2em/1.2 Helvetica, aria, sans-serif;
     margin: 0 1%;
 }
 
-h1{
+h1 {
     font-size: 1.8em;
     margin: .9em 0 0 0;
 }
 
-h2{
+h2 {
     font-size: 1.5em;
     margin: 1.5em 0 0 0;
 }
 
-img{
+img {
     max-width: 100%;
 }
 
-figure{
+figure {
     background: black;
     border-radius: 5px;
     color: red;
@@ -31,37 +31,37 @@ figure{
     width: 100%;
 }
 
-img{
+img {
     width: 100%;
     height: auto;
     display: block;
 }
 
-figcaption{
+figcaption {
     font-size: .8em;
 }
 
-footer{
+footer {
     text-align: center;
 }
 
-@media screen and (width >= 768px){
-    body{
+@media screen and (width >= 768px) {
+    body {
         background-color: #ccccfe;
     }
 
-    figure{
+    figure {
         display: inline-block;
         width: calc(50% - 5px);
     }
 }
 
-@media screen and (width >= 992px){
-    body{
+@media screen and (width >= 992px) {
+    body {
         background-color: #ccfecb;
     }
 
-    figure{
+    figure {
         display: inline-block;
         width: calc(33% - 1px);
     }

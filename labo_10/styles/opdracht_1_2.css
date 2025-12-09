@@ -1,19 +1,19 @@
-body{
+body {
     width: 100%;
     margin: 0 auto;
 }
 
-.row > div{
+.row > div {
     height: 150px;
     background-clip: content-box;
     background-color: #dbdfe5;
     font-size: 0;
 }
 
-.row > .dark{
+.row > .dark {
     background-color: #abb1b8;
 }
 
-footer{
+footer {
     text-align: center;
 }

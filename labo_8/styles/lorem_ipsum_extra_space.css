@@ -1,9 +1,9 @@
-body{
+body {
     margin: 0 auto;
     font-size: 0;
 }
 
-div{
+div {
     font-size: 16px;
     display: inline-block;
     border: 1px solid black;
@@ -15,6 +15,6 @@ div{
     margin: 10px;
 }
 
-footer{
+footer {
     font-size: 16px;
 }

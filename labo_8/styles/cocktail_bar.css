@@ -40,7 +40,7 @@ h2 {
     background-repeat: repeat-x;
 }
 
-#content{
+#content {
     width: 70%;
 }
 
@@ -50,15 +50,15 @@ footer {
     clear: both;
 }
 
-.color{
-    color:  #444444;
+.color {
+    color: #444444;
     margin: 30px;
     padding: 20px;
     background-color: #a7cece;
     border: white 2px dotted;
 }
 
-.color img{
+.color img {
     float: left;
     width: 60px;
     height: 60px;
@@ -66,11 +66,11 @@ footer {
     margin-left: -58px;
 }
 
-.color p{
+.color p {
     padding-left: 35px;
 }
 
-header{
+header {
     width: calc(70% - 15px);
     text-align: end;
 }
