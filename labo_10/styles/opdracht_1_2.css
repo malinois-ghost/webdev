@@ -10,7 +10,7 @@ body {
     font-size: 0;
 }
 
-.row > .dark {
+.row > div:nth-child(2n) {
     background-color: #abb1b8;
 }
 
