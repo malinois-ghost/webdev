@@ -1,40 +1,40 @@
-body{
+body {
     font-family: Helvetica, system-ui;
 }
 
-h1{
+h1 {
     font-size: 80px;
 }
 
-h2{
+h2 {
     font-size: 40px;
 }
 
-header > h1, header > h2{
+header > h1, header > h2 {
     color: #EDF2F4;
 }
 
-header, footer, .education{
+header, footer, .education {
     padding: 30px;
 }
 
-a{
+a {
     color: #EF233C;
 }
 
-header, footer{
+header, footer {
     color: #8D99AE;
     background-color: #2B2D42;
 }
 
-.education{
+.education {
     background-color: #8D99AE;
 }
 
-header{
+header {
     margin-bottom: 10px;
 }
 
-footer{
+footer {
     margin-top: 10px;
 }

@@ -1,4 +1,4 @@
-body{
+body {
     width: 90%;
     margin: 5px auto;
     background-color: lightblue;
@@ -9,30 +9,30 @@ body{
     height: 174px;
 }
 
-.jaws{
+.jaws {
     width: 413px;
     height: 500px;
 }
 
-.portrait{
+.portrait {
     width: 266px;
     height: 400px;
 }
 
-table, th, td{
+table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
 }
 
-th, td, h2, header, p, a, section{
+th, td, h2, header, p, a, section {
     text-align: center;
 }
 
-li{
+li {
     list-style-type: none;
 }
 
-section, header{
+section, header {
     border-bottom: 10px solid white;
 }
 
@@ -54,7 +54,7 @@ section, header{
     margin: 0;
 }
 
-table{
+table {
     width: 45%;
     margin: auto;
 }
@@ -64,10 +64,10 @@ section ul {
     margin: 0 auto;
 }
 
-.bottom{
+.bottom {
     margin-bottom: 20px;
 }
 
-.top{
+.top {
     margin-top: 10px;
 }

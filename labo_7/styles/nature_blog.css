@@ -1,62 +1,62 @@
-body{
+body {
     width: 95%;
     margin: 0 auto;
 
 }
 
-nav{
+nav {
     color: black;
     background-color: #444444;
     margin-top: 0;
     margin-bottom: 5px;
 }
 
-nav > a{
+nav > a {
     color: lightgreen;
     text-decoration: none;
 }
 
-h1{
+h1 {
     background-image: url("../images/header.jpg");
     background-size: cover;
     color: white;
     margin-bottom: 0;
-    margin-top:5px;
+    margin-top: 5px;
     padding-bottom: 4%;
     font-family: Arial, system-ui;
     font-weight: bold;
     font-size: 40px;
 }
 
-div{
+div {
     margin-left: 5px;
     margin-right: 5px;
 }
 
-article{
+article {
     background-color: lightgray;
-    padding-top:15px;
+    padding-top: 15px;
 }
 
-header{
+header {
     text-decoration: underline #444444;
     font-weight: bold;
 }
 
-h2, article, nav, article > footer, article > p{
+h2, article, nav, article > footer, article > p {
     padding-left: 10px;
     font-family: verdana, arial, system-ui;
 }
 
-h2{
+h2 {
     color: #444444;
 }
 
-article > footer{
+article > footer {
     margin-bottom: 5px;
     padding-bottom: 5px;
 }
 
-footer{
+footer {
     padding-left: 0
 }

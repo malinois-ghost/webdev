@@ -1,16 +1,16 @@
-body{
+body {
     width: 95%;
     margin: 10px auto;
 }
 
-nav{
+nav {
     color: black;
     background-color: #444444;
     margin-top: 0;
     margin-bottom: 5px;
 }
 
-nav > a{
+nav > a {
     color: lightgreen;
     text-decoration: none;
 

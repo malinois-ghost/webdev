@@ -1,8 +1,8 @@
-.checklist{
+.checklist {
     list-style-type: none;
 }
 
-.checklist li::before{
+.checklist li::before {
     content: "";
     background-image: url("../images/png-transparent-checkbox-others-miscellaneous-cdr-angle-158644303.png");
     width: 16px;

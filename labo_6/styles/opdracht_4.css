@@ -1,19 +1,19 @@
-body{
+body {
     font-family: Verdana, system-ui;
     font-size: 1.1em;
     background-color: silver;
     color: darkblue;
 }
 
-h1{
+h1 {
     font-variant: small-caps;
     background-color: red;
 }
 
-a:hover{
+a:hover {
     border: black solid 5px;
 }
 
-.stippeltjesrand{
+.stippeltjesrand {
     border: dotted 1px;
 }
