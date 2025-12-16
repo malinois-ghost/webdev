@@ -1,0 +1,60 @@
+body > div {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-template-rows: repeat(4, auto);
+    gap: 10px;
+}
+
+/* items */
+div div {
+    padding: 20px;
+    color: white;
+    font-size: 4em;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* specific item styles */
+
+div .item-1 {
+    background: #b03532;
+    grid-row: 1;
+    grid-column: 1;
+}
+div .item-2 {
+    background: #33a8a5;
+}
+div .item-3 {
+    background: #30997a;
+    grid-column: 1 / 3;
+}
+div .item-4 {
+    background: #6a478f;
+    grid-row: 2;
+}
+div .item-5 {
+    background: #da6f2b;
+    grid-row: 2;
+}
+div .item-6 {
+    background: #3d8bb1;
+    grid-row: 1;
+    grid-column: 1;
+}
+div .item-7 {
+    background: #e03f3f;
+    grid-row: 3;
+}
+div .item-8 {
+    background: #59a627;
+    grid-row: 3;
+}
+div .item-9 {
+    background: #4464a1;
+    grid-row: 1;
+    grid-column: 1;
+}
+
+footer{
+    text-align: center;
+}
