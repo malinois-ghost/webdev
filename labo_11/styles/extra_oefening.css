@@ -61,7 +61,7 @@ footer{
 
 @media screen and (width >= 760px){
     body > div {
-        grid-template-columns: repeat(3, auto);
+        grid-template-columns: 1fr 2fr 1fr;
         grid-template-rows: repeat(3, auto);
     }
 
