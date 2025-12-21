@@ -58,7 +58,7 @@ body {
     font-size: .75rem;
     inline-size: 100%;
     padding: 2em;
-    
+
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -86,4 +86,9 @@ body {
 
 .location {
     font-size: .75rem;
+}
+
+footer {
+    margin-top: 10px;
+    text-align: center;
 }
