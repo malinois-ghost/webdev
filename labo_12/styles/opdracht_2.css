@@ -1,6 +1,6 @@
 html {
    margin: 0;
-    padding: 0;
+   padding: 0;
 }
 
 body {
@@ -68,5 +68,10 @@ a {
 }
 
 .card {
+
+}
+
+footer {
+    text-align: center;
 
 }
