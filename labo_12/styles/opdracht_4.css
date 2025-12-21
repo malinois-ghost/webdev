@@ -58,7 +58,7 @@ body {
     font-size: .75rem;
     inline-size: 100%;
     padding: 2em;
-    /* zorg dat de statistische gegevens horizontaal komen */
+    
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
