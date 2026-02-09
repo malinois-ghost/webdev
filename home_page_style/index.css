@@ -13,8 +13,7 @@ body {
 h1 {
     text-align: center;
     color: #869AAD;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin: 40px 0;
 }
 
 .labo-grid {
@@ -24,54 +23,88 @@ h1 {
     align-items: start;
 }
 
+/* Labo Card Container */
 .labo {
     background-color: #869AAD;
-    padding: 20px;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    overflow: hidden; /* Important for the sliding effect */
+    transition: box-shadow 0.3s ease;
 }
 
+/* Header (The clickable part) */
 .labo h2 {
-    margin-top: 0;
-    margin-bottom: 15px;
+    margin: 0;
+    padding: 15px 20px;
     color: #2F3E46;
-    border-bottom: 2px solid #2F3E46;
-    padding-bottom: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between; /* Pushes arrow to the right */
+    align-items: center;
+    background-color: #869AAD;
+    transition: background-color 0.2s;
+    user-select: none; /* Prevents text selection when clicking quickly */
 }
 
+.labo h2:hover {
+    background-color: #758a9d;
+}
+
+/* The Arrow Indicator */
+.labo h2::after {
+    content: '▼';
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+/* Rotate arrow when active */
+.labo.active h2::after {
+    transform: rotate(180deg);
+}
+
+/* Content Container (Hidden by default) */
+.labo-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    background-color: #758a9d; /* Slightly darker background for content area */
+}
+
+/* Content Container (Visible state) */
+.labo.active .labo-content {
+    max-height: 500px; /* Arbitrary large height to allow expansion */
+}
+
+/* Button Styling */
 .project-btn {
     display: block;
     background-color: #2F3E46;
     color: white;
     text-decoration: none;
-    padding: 12px 15px;
-    margin-bottom: 10px;
+    padding: 12px 20px;
+    margin: 10px 15px;
     border-radius: 5px;
     text-align: center;
     transition: all 0.2s ease-in-out;
     font-weight: bold;
+    border-left: 4px solid transparent;
 }
 
-.project-btn:last-child {
-    margin-bottom: 0;
-}
-
+/* Button Hover Effect */
 .project-btn:hover {
-    background-color: #526D7A;
-    transform: translateY(-2px);
-    color: white;
+    background-color: #3d505a;
+    border-left: 4px solid #cf4444; /* Red accent on hover */
+    transform: translateX(5px);
 }
 
+/* Responsive Grid */
 @media screen and (min-width: 800px) {
-    .labo-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+    .labo-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media screen and (min-width: 1200px) {
-    .labo-grid {
-        grid-template-columns: repeat(5, 1fr);
-    }
+    .labo-grid { grid-template-columns: repeat(5, 1fr); }
 }

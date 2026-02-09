@@ -101,27 +101,50 @@ const labs = [
 
 const renderLabs = () => {
     const container = document.getElementById('labo-container');
-
     container.innerHTML = '';
 
     labs.forEach(lab => {
+        // 1. Create the main card container
         const labDiv = document.createElement('div');
         labDiv.className = 'labo';
 
+        // 2. Create the Clickable Header
         const title = document.createElement('h2');
         title.textContent = lab.title;
-        labDiv.appendChild(title);
 
+        // 3. Create the Content Wrapper (initially hidden by CSS)
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'labo-content';
+
+        // 4. Create the Project Buttons
         lab.projects.forEach(project => {
             const btn = document.createElement('a');
             btn.href = project.url;
             btn.className = 'project-btn';
             btn.textContent = project.name;
-            labDiv.appendChild(btn);
+            contentDiv.appendChild(btn);
         });
 
+        // 5. Add Click Event for toggling
+        title.addEventListener('click', () => {
+            // Optional: Close all others when opening one (Accordion Style)
+            // Uncomment the lines below if you want that behavior:
+            /*
+            document.querySelectorAll('.labo').forEach(item => {
+                if (item !== labDiv) item.classList.remove('active');
+            });
+            */
+
+            // Toggle this card
+            labDiv.classList.toggle('active');
+        });
+
+        // 6. Assemble the card
+        labDiv.appendChild(title);
+        labDiv.appendChild(contentDiv);
         container.appendChild(labDiv);
     });
 };
 
+// Run when page loads
 window.addEventListener('load', renderLabs);
