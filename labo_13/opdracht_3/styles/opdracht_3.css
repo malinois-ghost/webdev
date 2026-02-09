@@ -1,0 +1,24 @@
+body {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 80px);
+    justify-content: center;
+    align-content: center;
+    min-height: 100vh;
+    gap: 10px;
+}
+
+#txtLinks,
+#txtRechts,
+#txtOutput {
+    grid-column: span 4;
+}
+
+#txtRechts {
+    grid-row: 3;
+}
+
+#txtOutput {
+    grid-column: span 4;
+    text-align: center;
+}
