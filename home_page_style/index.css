@@ -23,18 +23,16 @@ h1 {
     align-items: start;
 }
 
-/* Labo Card Container */
 .labo {
     background-color: #869AAD;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    overflow: hidden; /* Important for the sliding effect */
+    overflow: hidden;
     transition: box-shadow 0.3s ease;
 }
 
-/* Header (The clickable part) */
 .labo h2 {
     margin: 0;
     padding: 15px 20px;
@@ -42,43 +40,38 @@ h1 {
     font-size: 1.2rem;
     cursor: pointer;
     display: flex;
-    justify-content: space-between; /* Pushes arrow to the right */
+    justify-content: space-between;
     align-items: center;
     background-color: #869AAD;
     transition: background-color 0.2s;
-    user-select: none; /* Prevents text selection when clicking quickly */
+    user-select: none;
 }
 
 .labo h2:hover {
     background-color: #758a9d;
 }
 
-/* The Arrow Indicator */
 .labo h2::after {
     content: '▼';
     font-size: 0.8rem;
     transition: transform 0.3s ease;
 }
 
-/* Rotate arrow when active */
 .labo.active h2::after {
     transform: rotate(180deg);
 }
 
-/* Content Container (Hidden by default) */
 .labo-content {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease-out;
-    background-color: #758a9d; /* Slightly darker background for content area */
+    background-color: #758a9d;
 }
 
-/* Content Container (Visible state) */
 .labo.active .labo-content {
-    max-height: 500px; /* Arbitrary large height to allow expansion */
+    max-height: 500px;
 }
 
-/* Button Styling */
 .project-btn {
     display: block;
     background-color: #2F3E46;
@@ -93,14 +86,12 @@ h1 {
     border-left: 4px solid transparent;
 }
 
-/* Button Hover Effect */
 .project-btn:hover {
     background-color: #3d505a;
-    border-left: 4px solid #cf4444; /* Red accent on hover */
+    border-left: 4px solid #cf4444;
     transform: translateX(5px);
 }
 
-/* Responsive Grid */
 @media screen and (min-width: 800px) {
     .labo-grid { grid-template-columns: repeat(3, 1fr); }
 }

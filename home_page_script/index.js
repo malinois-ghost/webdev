@@ -103,48 +103,49 @@ const renderLabs = () => {
     const container = document.getElementById('labo-container');
     container.innerHTML = '';
 
+    const savedLab = localStorage.getItem('activeLab');
+
     labs.forEach(lab => {
-        // 1. Create the main card container
         const labDiv = document.createElement('div');
         labDiv.className = 'labo';
 
-        // 2. Create the Clickable Header
+        if (lab.title === savedLab) {
+            labDiv.classList.add('active');
+        }
+
         const title = document.createElement('h2');
         title.textContent = lab.title;
 
-        // 3. Create the Content Wrapper (initially hidden by CSS)
         const contentDiv = document.createElement('div');
         contentDiv.className = 'labo-content';
 
-        // 4. Create the Project Buttons
         lab.projects.forEach(project => {
             const btn = document.createElement('a');
             btn.href = project.url;
             btn.className = 'project-btn';
             btn.textContent = project.name;
+
+            btn.addEventListener('click', () => {
+                localStorage.setItem('activeLab', lab.title);
+            });
+
             contentDiv.appendChild(btn);
         });
 
-        // 5. Add Click Event for toggling
         title.addEventListener('click', () => {
-            // Optional: Close all others when opening one (Accordion Style)
-            // Uncomment the lines below if you want that behavior:
-            /*
-            document.querySelectorAll('.labo').forEach(item => {
-                if (item !== labDiv) item.classList.remove('active');
-            });
-            */
-
-            // Toggle this card
-            labDiv.classList.toggle('active');
+            const isActive = labDiv.classList.toggle('active');
+            
+            if (isActive) {
+                localStorage.setItem('activeLab', lab.title);
+            } else {
+                localStorage.removeItem('activeLab');
+            }
         });
 
-        // 6. Assemble the card
         labDiv.appendChild(title);
         labDiv.appendChild(contentDiv);
         container.appendChild(labDiv);
     });
 };
 
-// Run when page loads
 window.addEventListener('load', renderLabs);
