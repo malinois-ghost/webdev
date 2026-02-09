@@ -134,7 +134,7 @@ const renderLabs = () => {
 
         title.addEventListener('click', () => {
             const isActive = labDiv.classList.toggle('active');
-            
+
             if (isActive) {
                 localStorage.setItem('activeLab', lab.title);
             } else {
@@ -148,4 +148,21 @@ const renderLabs = () => {
     });
 };
 
-window.addEventListener('load', renderLabs);
+const setupCloseAll = () => {
+    const closeBtn = document.getElementById('close-all-btn');
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            document.querySelectorAll('.labo').forEach(lab => {
+                lab.classList.remove('active');
+            });
+
+            localStorage.removeItem('activeLab');
+        });
+    }
+};
+
+window.addEventListener('load', () => {
+    renderLabs();
+    setupCloseAll();
+});

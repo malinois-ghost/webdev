@@ -92,6 +92,31 @@ h1 {
     transform: translateX(5px);
 }
 
+#close-all-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #cf4444;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+#close-all-btn:hover {
+    background-color: #a83232;
+    transform: scale(1.05);
+}
+
+#close-all-btn:active {
+    transform: scale(0.95);
+}
+
 @media screen and (min-width: 800px) {
     .labo-grid { grid-template-columns: repeat(3, 1fr); }
 }
