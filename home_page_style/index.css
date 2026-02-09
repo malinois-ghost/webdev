@@ -7,43 +7,61 @@ body {
     width: 95%;
     background-color: #2F3E46;
     font-family: Arial, sans-serif;
+    padding-bottom: 50px;
 }
 
 h1 {
     text-align: center;
     color: #869AAD;
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 .labo-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
-    align-items: stretch;
+    align-items: start;
 }
-
 
 .labo {
     background-color: #869AAD;
-    padding: 10px 15px;
-    border-radius: 6px;
+    padding: 20px;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
-    min-width: 0;
-}
-
-.labo ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex: 1;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 .labo h2 {
     margin-top: 0;
+    margin-bottom: 15px;
+    color: #2F3E46;
+    border-bottom: 2px solid #2F3E46;
+    padding-bottom: 5px;
 }
 
-a:hover {
-    color: red;
+.project-btn {
+    display: block;
+    background-color: #2F3E46;
+    color: white;
+    text-decoration: none;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    font-weight: bold;
+}
+
+.project-btn:last-child {
+    margin-bottom: 0;
+}
+
+.project-btn:hover {
+    background-color: #526D7A;
+    transform: translateY(-2px);
+    color: white;
 }
 
 @media screen and (min-width: 800px) {
