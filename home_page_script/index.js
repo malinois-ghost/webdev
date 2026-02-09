@@ -94,7 +94,8 @@ const labs = [
     {
         title: "Labo 13",
         projects: [
-            { name: "Opdracht 2", url: "labo_13/opdracht_2/index.html" }
+            { name: "Opdracht 2", url: "labo_13/opdracht_2/index.html" },
+            { name: "Opdracht 3", url: "labo_13/opdracht_3/opdracht_3.html" }
         ]
     }
 ];
