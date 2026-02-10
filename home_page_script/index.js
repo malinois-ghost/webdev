@@ -106,7 +106,7 @@ const labs = [
             { name: "innerHTML", url: "labo_14/inner_html.html" },
             { name: "innerHTML aanpassing", url: "labo_14/inner_html_aanpassing.html" },
             { name: "kopieer", url: "labo_14/kopieer.html" },
-            { name: "substring", url: "labo_14/substring.html" }
+            { name: "substring,", url: "labo_14/substring.html" }
         ]
     }
 ];
