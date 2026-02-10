@@ -97,6 +97,15 @@ const labs = [
             { name: "Opdracht 2", url: "labo_13/opdracht_2/index.html" },
             { name: "Opdracht 3", url: "labo_13/opdracht_3/opdracht_3.html" }
         ]
+    },
+    {
+        title: "Labo 14",
+        projects: [
+            { name: "Arrays", url: "labo_14/arrays.html" },
+            { name: "Dialoogvensters", url: "labo_14/dialoogvensters.html" },
+            { name: "innerHTML", url: "labo_14/inner_html.html" },
+            { name: "innerHTML aanpassing", url: "labo_14/inner_html_aanpassing.html" }
+        ]
     }
 ];
 
