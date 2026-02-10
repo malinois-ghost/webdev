@@ -18,7 +18,7 @@ body {
     grid-row: 3;
 }
 
-#txtOutput {
+#txtOutput, footer {
     grid-column: span 4;
     text-align: center;
 }
