@@ -16,6 +16,52 @@ h1 {
     margin: 40px 0;
 }
 
+.search-container {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.filter-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+}
+
+.filter-group input {
+    background-color: #869AAD;
+    border: 2px solid #758a9d;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #2F3E46;
+    font-weight: bold;
+    outline: none;
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-group input::placeholder {
+    color: #4a5d68;
+}
+
+#clear-search-btn {
+    background-color: #758a9d;
+    color: #2F3E46;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+#clear-search-btn:hover {
+    background-color: #9db2c5;
+}
+
 .labo-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -47,9 +93,7 @@ h1 {
     user-select: none;
 }
 
-.labo h2:hover {
-    background-color: #758a9d;
-}
+.labo h2:hover { background-color: #758a9d; }
 
 .labo h2::after {
     content: '▼';
@@ -57,9 +101,7 @@ h1 {
     transition: transform 0.3s ease;
 }
 
-.labo.active h2::after {
-    transform: rotate(180deg);
-}
+.labo.active h2::after { transform: rotate(180deg); }
 
 .labo-content {
     max-height: 0;
@@ -68,9 +110,7 @@ h1 {
     background-color: #758a9d;
 }
 
-.labo.active .labo-content {
-    max-height: 500px;
-}
+.labo.active .labo-content { max-height: 800px; }
 
 .project-btn {
     display: block;
@@ -105,22 +145,7 @@ h1 {
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     z-index: 1000;
-    transition: transform 0.2s, background-color 0.2s;
 }
 
-#close-all-btn:hover {
-    background-color: #a83232;
-    transform: scale(1.05);
-}
-
-#close-all-btn:active {
-    transform: scale(0.95);
-}
-
-@media screen and (min-width: 800px) {
-    .labo-grid { grid-template-columns: repeat(3, 1fr); }
-}
-
-@media screen and (min-width: 1200px) {
-    .labo-grid { grid-template-columns: repeat(5, 1fr); }
-}
+@media screen and (min-width: 800px) { .labo-grid { grid-template-columns: repeat(3, 1fr); } }
+@media screen and (min-width: 1200px) { .labo-grid { grid-template-columns: repeat(5, 1fr); } }

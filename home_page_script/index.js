@@ -119,17 +119,32 @@ const labs = [
     }
 ];
 
+let labQuery = "";
+let projectQuery = "";
+
 const renderLabs = () => {
     const container = document.getElementById('labo-container');
+    const projectFilterInput = document.getElementById('project-filter');
     container.innerHTML = '';
 
     const savedLab = localStorage.getItem('activeLab');
 
-    labs.forEach(lab => {
+    const filteredLabs = labs.filter(lab =>
+        lab.title.toLowerCase().includes(labQuery.toLowerCase())
+    );
+
+    if (filteredLabs.length === 1 && filteredLabs[0].projects.length > 1) {
+        projectFilterInput.style.display = 'block';
+    } else {
+        projectFilterInput.style.display = 'none';
+        projectQuery = "";
+    }
+
+    filteredLabs.forEach(lab => {
         const labDiv = document.createElement('div');
         labDiv.className = 'labo';
 
-        if (lab.title === savedLab) {
+        if (lab.title === savedLab || filteredLabs.length === 1) {
             labDiv.classList.add('active');
         }
 
@@ -139,7 +154,11 @@ const renderLabs = () => {
         const contentDiv = document.createElement('div');
         contentDiv.className = 'labo-content';
 
-        lab.projects.forEach(project => {
+        const filteredProjects = lab.projects.filter(proj =>
+            proj.name.toLowerCase().includes(projectQuery.toLowerCase())
+        );
+
+        filteredProjects.forEach(project => {
             const btn = document.createElement('a');
             btn.href = project.url;
             btn.className = 'project-btn';
@@ -154,7 +173,6 @@ const renderLabs = () => {
 
         title.addEventListener('click', () => {
             const isActive = labDiv.classList.toggle('active');
-
             if (isActive) {
                 localStorage.setItem('activeLab', lab.title);
             } else {
@@ -168,21 +186,43 @@ const renderLabs = () => {
     });
 };
 
-const setupCloseAll = () => {
-    const closeBtn = document.getElementById('close-all-btn');
+const setupControls = () => {
+    const labInput = document.getElementById('lab-filter');
+    const projectInput = document.getElementById('project-filter');
+    const clearBtn = document.getElementById('clear-search-btn');
+    const closeAllBtn = document.getElementById('close-all-btn');
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            document.querySelectorAll('.labo').forEach(lab => {
-                lab.classList.remove('active');
-            });
+    labInput.addEventListener('input', (e) => {
+        labQuery = e.target.value;
+        renderLabs();
+    });
 
+    projectInput.addEventListener('input', (e) => {
+        projectQuery = e.target.value;
+        renderLabs();
+    });
+
+    clearBtn.addEventListener('click', () => {
+        labQuery = "";
+        projectQuery = "";
+        labInput.value = "";
+        projectInput.value = "";
+        renderLabs();
+    });
+
+    if (closeAllBtn) {
+        closeAllBtn.addEventListener('click', () => {
+            document.querySelectorAll('.labo').forEach(lab => lab.classList.remove('active'));
             localStorage.removeItem('activeLab');
+            // Optional: also clear search when closing all
+            labQuery = "";
+            labInput.value = "";
+            renderLabs();
         });
     }
 };
 
 window.addEventListener('load', () => {
     renderLabs();
-    setupCloseAll();
+    setupControls();
 });

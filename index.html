@@ -9,6 +9,14 @@
 <body>
 <h1>Web Development 1</h1>
 
+<div class="search-container">
+    <div class="filter-group">
+        <label for="lab-filter"></label><input type="text" id="lab-filter" placeholder="Zoek labo (bijv. Labo 2)...">
+        <label for="project-filter"></label><input type="text" id="project-filter" placeholder="Zoek opdracht..." style="display: none;">
+        <button id="clear-search-btn" title="Wis zoekopdracht">Wis filters</button>
+    </div>
+</div>
+
 <div id="labo-container" class="labo-grid"></div>
 
 <button id="close-all-btn" title="Sluit alle labo's">✕ Sluit Alles</button>
