@@ -114,7 +114,7 @@ const labs = [
         projects: [
             { name: "Paragrafen", url: "labo_15/paragrafen.html" },
             { name: "Colorpicker", url: "labo_15/colorpicker.html" },
-            { name: "kleurenwisselaar", url: "labo_15/kleurenwisselaar.html" }
+            { name: "Kleurenwisselaar", url: "labo_15/kleurenwisselaar.html" }
         ]
     }
 ];
