@@ -1,0 +1,15 @@
+.buttonExtra{
+    background-color: white;
+    border: 1px solid black;
+}
+
+.button{
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
+.buttonBlue{
+    background-color: blue;
+    color: white;
+}
