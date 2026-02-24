@@ -108,6 +108,14 @@ const labs = [
             { name: "kopieer", url: "labo_14/kopieer.html" },
             { name: "substring", url: "labo_14/substring.html" }
         ]
+    },
+    {
+        title: "Labo 15",
+        projects: [
+            { name: "Paragrafen", url: "labo_15/paragrafen.html" },
+            { name: "Colorpicker", url: "labo_15/colorpicker.html" },
+            { name: "kleurenwisselaar", url: "labo_15/kleurenwisselaar.html" }
+        ]
     }
 ];
 
