@@ -207,9 +207,15 @@ const renderLabs = () => {
     }
 
     if (pageTitle) {
-        pageTitle.textContent = (trimmedCourseQuery && /^\d+$/.test(trimmedCourseQuery))
-            ? `Web Development ${trimmedCourseQuery}`
-            : "Web Development";
+        const match = trimmedCourseQuery.match(/\d+/);
+
+        if (match) {
+            pageTitle.textContent = `Web Development ${match[0]}`;
+        } else if (trimmedCourseQuery.length > 0) {
+            pageTitle.textContent = "Web Development";
+        } else {
+            pageTitle.textContent = "Web Development";
+        }
     }
 
     filteredLabs.forEach(lab => {
