@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Producten</title>
+    <link href="styles/producten.css" rel="stylesheet">
+</head>
+<body>
+<table>
+    <tr>
+        <th>Producten</th>
+        <th>Prijs</th>
+        <th>Aantal</th>
+        <th>BTW</th>
+        <th>Subtotaal</th>
+    </tr>
+    <tr>
+        <td class="product">Product 1</td>
+        <td class="prijs">10.00 Eur</td>
+        <td><label><input class="aantal" type="number" value="0"></label></td>
+        <td class="btw">6%</td>
+        <td><p class="subtotaal">0.00 Eur</p></td>
+    </tr>
+    <tr>
+        <td class="product">Product 2</td>
+        <td class="prijs">15.00 Eur</td>
+        <td><label><input class="aantal" type="number" value="0"></label></td>
+        <td class="btw">21%</td>
+        <td><p class="subtotaal">0.00 Eur</p></td>
+    </tr>
+    <tr>
+        <td class="product">Product 3</td>
+        <td class="prijs">12.20 Eur</td>
+        <td><label><input class="aantal" type="number" value="0"></label></td>
+        <td class="btw">21%</td>
+        <td><p class="subtotaal">0.00 Eur</p></td>
+    </tr>
+    <tr>
+        <td colspan="4">totaal</td>
+        <td><p class="totaal">0.00 Eur</p></td>
+    </tr>
+</table>
+
+<input class="herberekenen" type="button" value="Herberekenen"/>
+
+<footer>
+    <a href="../index.html">Home Page</a>
+</footer>
+
+<script src="scripts/producten.js"></script>
+</body>
+</html>

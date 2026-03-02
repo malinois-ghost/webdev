@@ -1,0 +1,9 @@
+table, th, td {
+    border: 1px solid black;
+}
+
+.aantal {
+    border: none;
+    outline: none;
+    background: transparent;
+}
