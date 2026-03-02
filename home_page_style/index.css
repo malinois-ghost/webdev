@@ -147,5 +147,22 @@ h1 {
     z-index: 1000;
 }
 
+.project-btn:active,
+#clear-search-btn:active,
+#close-all-btn:active,
+.labo h2:active {
+    transform: scale(0.96);
+    transition: transform 0.1s;
+}
+
+.labo-content {
+    opacity: 0;
+    transition: max-height 0.4s ease-in-out, opacity 0.3s ease;
+}
+
+.labo.active .labo-content {
+    opacity: 1;
+}
+
 @media screen and (min-width: 800px) { .labo-grid { grid-template-columns: repeat(3, 1fr); } }
 @media screen and (min-width: 1200px) { .labo-grid { grid-template-columns: repeat(5, 1fr); } }

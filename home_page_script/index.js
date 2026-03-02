@@ -137,18 +137,32 @@ let courseQuery = "";
 let labQuery = "";
 let projectQuery = "";
 
+const getActiveLabs = () => {
+    const saved = localStorage.getItem('activeLabs');
+    return saved ? JSON.parse(saved) : [];
+};
+
+const toggleLabStorage = (labTitle) => {
+    let activeLabs = getActiveLabs();
+    if (activeLabs.includes(labTitle)) {
+        activeLabs = activeLabs.filter(title => title !== labTitle);
+    } else {
+        activeLabs.push(labTitle);
+    }
+    localStorage.setItem('activeLabs', JSON.stringify(activeLabs));
+};
+
 const renderLabs = () => {
     const container = document.getElementById('labo-container');
-    const courseInput = document.getElementById('course-filter');
-    const labInput = document.getElementById('lab-filter');
     const projectInput = document.getElementById('project-filter');
     const pageTitle = document.querySelector('h1');
 
     container.innerHTML = '';
 
-    const savedLab = localStorage.getItem('activeLab');
+    const activeLabs = getActiveLabs();
     const trimmedLabQuery = labQuery.trim().toLowerCase();
     const trimmedCourseQuery = courseQuery.trim().toLowerCase();
+    const trimmedProjectQuery = projectQuery.trim().toLowerCase();
 
     const filteredLabs = labs.filter(lab => {
         let matchesCourse = true;
@@ -156,11 +170,7 @@ const renderLabs = () => {
             const isNumeric = /^\d+$/.test(trimmedCourseQuery);
             const courseParts = lab.course.toLowerCase().split(' ');
             const courseNumStr = courseParts[courseParts.length - 1];
-            if (isNumeric) {
-                matchesCourse = courseNumStr === trimmedCourseQuery;
-            } else {
-                matchesCourse = lab.course.toLowerCase().includes(trimmedCourseQuery);
-            }
+            matchesCourse = isNumeric ? courseNumStr === trimmedCourseQuery : lab.course.toLowerCase().includes(trimmedCourseQuery);
         }
 
         let matchesLab = true;
@@ -168,56 +178,35 @@ const renderLabs = () => {
             const isNumeric = /^\d+$/.test(trimmedLabQuery);
             const titleParts = lab.title.toLowerCase().split(' ');
             const labNumStr = titleParts[titleParts.length - 1];
-            if (isNumeric) {
-                matchesLab = labNumStr === trimmedLabQuery;
-            } else {
-                matchesLab = lab.title.toLowerCase().includes(trimmedLabQuery);
-            }
+            matchesLab = isNumeric ? labNumStr === trimmedLabQuery : lab.title.toLowerCase().includes(trimmedLabQuery);
         }
+
+        if (trimmedProjectQuery !== "") {
+            const hasMatchingProject = lab.projects.some(p => p.name.toLowerCase().includes(trimmedProjectQuery));
+            return matchesCourse && matchesLab && hasMatchingProject;
+        }
+
         return matchesCourse && matchesLab;
     });
 
     if (pageTitle) {
-        const isNumeric = /^\d+$/.test(trimmedCourseQuery);
-        if (isNumeric) {
-            pageTitle.textContent = `Web Development ${trimmedCourseQuery}`;
-        } else if (trimmedCourseQuery !== "" && filteredLabs.length > 0) {
-            const firstCourseName = filteredLabs[0].course;
-            pageTitle.textContent = (trimmedCourseQuery === firstCourseName.toLowerCase()) ? firstCourseName : "Web Development";
-        } else {
-            pageTitle.textContent = "Web Development";
-        }
+        pageTitle.textContent = (trimmedCourseQuery && /^\d+$/.test(trimmedCourseQuery))
+            ? `Web Development ${trimmedCourseQuery}`
+            : "Web Development";
     }
 
-    if (filteredLabs.length > 0) {
-        const firstLab = filteredLabs[0];
-        const courseNum = firstLab.course.split(' ').pop();
-        const labNum = firstLab.title.split(' ').pop();
-
-        courseInput.placeholder = `Vak (bijv. ${courseNum}) of naam...`;
-        labInput.placeholder = `Labo (bijv. ${labNum}) of naam...`;
-
-        courseInput.size = courseInput.placeholder.length;
-        labInput.size = labInput.placeholder.length;
-
-        if (filteredLabs.length === 1) {
-            projectInput.style.display = 'inline-block';
-            projectInput.placeholder = firstLab.projects[0].name;
-            projectInput.size = projectInput.placeholder.length;
-        } else {
-            projectInput.style.display = 'none';
-            projectQuery = "";
-        }
-    }
+    projectInput.style.display = 'inline-block';
+    projectInput.placeholder = "Zoek opdracht...";
 
     filteredLabs.forEach(lab => {
         const labDiv = document.createElement('div');
         labDiv.className = 'labo';
 
-        const isOnlyResult = (trimmedLabQuery !== "" || trimmedCourseQuery !== "") && filteredLabs.length === 1;
-        if (lab.title === savedLab || isOnlyResult) {
-            labDiv.classList.add('active');
-        }
+        const shouldBeOpen = activeLabs.includes(lab.title) ||
+            (trimmedProjectQuery !== "") ||
+            (filteredLabs.length === 1 && (trimmedLabQuery !== "" || trimmedCourseQuery !== ""));
+
+        if (shouldBeOpen) labDiv.classList.add('active');
 
         const title = document.createElement('h2');
         title.innerHTML = `<span>${lab.title}</span><small style="font-size: 0.6em; opacity: 0.7; margin-left: 10px;">${lab.course}</small>`;
@@ -225,22 +214,21 @@ const renderLabs = () => {
         const contentDiv = document.createElement('div');
         contentDiv.className = 'labo-content';
 
-        const filteredProjects = lab.projects.filter(proj =>
-            proj.name.toLowerCase().includes(projectQuery.toLowerCase())
+        const visibleProjects = lab.projects.filter(proj =>
+            proj.name.toLowerCase().includes(trimmedProjectQuery)
         );
 
-        filteredProjects.forEach(project => {
+        visibleProjects.forEach(project => {
             const btn = document.createElement('a');
             btn.href = project.url;
             btn.className = 'project-btn';
             btn.textContent = project.name;
-            btn.addEventListener('click', () => localStorage.setItem('activeLab', lab.title));
             contentDiv.appendChild(btn);
         });
 
         title.addEventListener('click', () => {
-            const isActive = labDiv.classList.toggle('active');
-            isActive ? localStorage.setItem('activeLab', lab.title) : localStorage.removeItem('activeLab');
+            labDiv.classList.toggle('active');
+            toggleLabStorage(lab.title);
         });
 
         labDiv.appendChild(title);
@@ -254,25 +242,22 @@ const setupControls = () => {
     const labInput = document.getElementById('lab-filter');
     const projectInput = document.getElementById('project-filter');
     const clearBtn = document.getElementById('clear-search-btn');
+    const closeAllBtn = document.getElementById('close-all-btn');
 
-    courseInput.addEventListener('input', (e) => {
-        courseQuery = e.target.value;
-        renderLabs();
-    });
-
-    labInput.addEventListener('input', (e) => {
-        labQuery = e.target.value;
-        renderLabs();
-    });
-
-    projectInput.addEventListener('input', (e) => {
-        projectQuery = e.target.value;
-        renderLabs();
-    });
+    courseInput.addEventListener('input', (e) => { courseQuery = e.target.value; renderLabs(); });
+    labInput.addEventListener('input', (e) => { labQuery = e.target.value; renderLabs(); });
+    projectInput.addEventListener('input', (e) => { projectQuery = e.target.value; renderLabs(); });
 
     clearBtn.addEventListener('click', () => {
         courseQuery = ""; labQuery = ""; projectQuery = "";
         courseInput.value = ""; labInput.value = ""; projectInput.value = "";
+        renderLabs();
+    });
+
+    closeAllBtn.addEventListener('click', () => {
+        courseQuery = ""; labQuery = ""; projectQuery = "";
+        courseInput.value = ""; labInput.value = ""; projectInput.value = "";
+        localStorage.removeItem('activeLabs');
         renderLabs();
     });
 };
