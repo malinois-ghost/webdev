@@ -1,5 +1,6 @@
 const labs = [
     {
+        course: "Web Development 1",
         title: "Labo 2",
         projects: [
             { name: "Opdracht 3", url: "labo_2/opdracht_3.html" },
@@ -11,6 +12,7 @@ const labs = [
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 3",
         projects: [
             { name: "Personal homepage", url: "labo_3/personal_homepage/personal_homepage.html" },
@@ -20,12 +22,14 @@ const labs = [
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 4",
         projects: [
             { name: "Personal homepage opsplitsing", url: "labo_4/personal_homepage_opsplitsing.html" }
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 5",
         projects: [
             { name: "Opdracht 6", url: "labo_5/opdracht_6.html" },
@@ -33,6 +37,7 @@ const labs = [
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 6",
         projects: [
             { name: "Opdracht 1", url: "labo_6/opdracht_1.html" },
@@ -43,6 +48,7 @@ const labs = [
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 7",
         projects: [
             { name: "Nature blog", url: "labo_7/nature_blog/nature_blog.html" },
@@ -52,6 +58,7 @@ const labs = [
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 8",
         projects: [
             { name: "Lorem Ipsum", url: "labo_8/lorem_ipsum.html" },
@@ -60,6 +67,7 @@ const labs = [
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 9",
         projects: [
             { name: "Positioneren van images", url: "labo_9/positioneren_van_images.html" },
@@ -67,6 +75,7 @@ const labs = [
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 10",
         projects: [
             { name: "Media queries", url: "labo_10/media_queries.html" },
@@ -77,6 +86,7 @@ const labs = [
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 11",
         projects: [
             { name: "Grid Oefeningen", url: "labo_11/grid_oefeningen.html" },
@@ -84,6 +94,7 @@ const labs = [
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 12",
         projects: [
             { name: "Opdracht 2", url: "labo_12/opdracht_2.html" },
@@ -92,6 +103,7 @@ const labs = [
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 13",
         projects: [
             { name: "Opdracht 2", url: "labo_13/opdracht_2/index.html" },
@@ -99,6 +111,7 @@ const labs = [
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 14",
         projects: [
             { name: "Arrays", url: "labo_14/arrays.html" },
@@ -110,6 +123,7 @@ const labs = [
         ]
     },
     {
+        course: "Web Development 1",
         title: "Labo 15",
         projects: [
             { name: "Paragrafen", url: "labo_15/paragrafen.html" },
@@ -119,37 +133,94 @@ const labs = [
     }
 ];
 
+let courseQuery = "";
 let labQuery = "";
 let projectQuery = "";
 
 const renderLabs = () => {
     const container = document.getElementById('labo-container');
-    const projectFilterInput = document.getElementById('project-filter');
+    const courseInput = document.getElementById('course-filter');
+    const labInput = document.getElementById('lab-filter');
+    const projectInput = document.getElementById('project-filter');
+    const pageTitle = document.querySelector('h1');
+
     container.innerHTML = '';
 
     const savedLab = localStorage.getItem('activeLab');
+    const trimmedLabQuery = labQuery.trim().toLowerCase();
+    const trimmedCourseQuery = courseQuery.trim().toLowerCase();
 
-    const filteredLabs = labs.filter(lab =>
-        lab.title.toLowerCase().includes(labQuery.toLowerCase())
-    );
+    const filteredLabs = labs.filter(lab => {
+        let matchesCourse = true;
+        if (trimmedCourseQuery !== "") {
+            const isNumeric = /^\d+$/.test(trimmedCourseQuery);
+            const courseParts = lab.course.toLowerCase().split(' ');
+            const courseNumStr = courseParts[courseParts.length - 1];
+            if (isNumeric) {
+                matchesCourse = courseNumStr === trimmedCourseQuery;
+            } else {
+                matchesCourse = lab.course.toLowerCase().includes(trimmedCourseQuery);
+            }
+        }
 
-    if (filteredLabs.length === 1 && filteredLabs[0].projects.length > 1) {
-        projectFilterInput.style.display = 'block';
-    } else {
-        projectFilterInput.style.display = 'none';
-        projectQuery = "";
+        let matchesLab = true;
+        if (trimmedLabQuery !== "") {
+            const isNumeric = /^\d+$/.test(trimmedLabQuery);
+            const titleParts = lab.title.toLowerCase().split(' ');
+            const labNumStr = titleParts[titleParts.length - 1];
+            if (isNumeric) {
+                matchesLab = labNumStr === trimmedLabQuery;
+            } else {
+                matchesLab = lab.title.toLowerCase().includes(trimmedLabQuery);
+            }
+        }
+        return matchesCourse && matchesLab;
+    });
+
+    if (pageTitle) {
+        const isNumeric = /^\d+$/.test(trimmedCourseQuery);
+        if (isNumeric) {
+            pageTitle.textContent = `Web Development ${trimmedCourseQuery}`;
+        } else if (trimmedCourseQuery !== "" && filteredLabs.length > 0) {
+            const firstCourseName = filteredLabs[0].course;
+            pageTitle.textContent = (trimmedCourseQuery === firstCourseName.toLowerCase()) ? firstCourseName : "Web Development";
+        } else {
+            pageTitle.textContent = "Web Development";
+        }
+    }
+
+    if (filteredLabs.length > 0) {
+        const firstLab = filteredLabs[0];
+        const courseNum = firstLab.course.split(' ').pop();
+        const labNum = firstLab.title.split(' ').pop();
+
+        courseInput.placeholder = `Vak (bijv. ${courseNum}) of naam...`;
+        labInput.placeholder = `Labo (bijv. ${labNum}) of naam...`;
+
+        courseInput.size = courseInput.placeholder.length;
+        labInput.size = labInput.placeholder.length;
+
+        if (filteredLabs.length === 1) {
+            projectInput.style.display = 'inline-block';
+            projectInput.placeholder = firstLab.projects[0].name;
+            projectInput.size = projectInput.placeholder.length;
+        } else {
+            projectInput.style.display = 'none';
+            projectQuery = "";
+        }
     }
 
     filteredLabs.forEach(lab => {
         const labDiv = document.createElement('div');
         labDiv.className = 'labo';
 
-        if (lab.title === savedLab || filteredLabs.length === 1) {
+        const isOnlyResult = (trimmedLabQuery !== "" || trimmedCourseQuery !== "") && filteredLabs.length === 1;
+        if (lab.title === savedLab || isOnlyResult) {
             labDiv.classList.add('active');
         }
 
         const title = document.createElement('h2');
-        title.textContent = lab.title;
+        title.innerHTML = `<span>${lab.title}</span><small style="font-size: 0.6em; opacity: 0.7; margin-left: 10px;">${lab.course}</small>`;
 
         const contentDiv = document.createElement('div');
         contentDiv.className = 'labo-content';
@@ -163,21 +234,13 @@ const renderLabs = () => {
             btn.href = project.url;
             btn.className = 'project-btn';
             btn.textContent = project.name;
-
-            btn.addEventListener('click', () => {
-                localStorage.setItem('activeLab', lab.title);
-            });
-
+            btn.addEventListener('click', () => localStorage.setItem('activeLab', lab.title));
             contentDiv.appendChild(btn);
         });
 
         title.addEventListener('click', () => {
             const isActive = labDiv.classList.toggle('active');
-            if (isActive) {
-                localStorage.setItem('activeLab', lab.title);
-            } else {
-                localStorage.removeItem('activeLab');
-            }
+            isActive ? localStorage.setItem('activeLab', lab.title) : localStorage.removeItem('activeLab');
         });
 
         labDiv.appendChild(title);
@@ -187,10 +250,15 @@ const renderLabs = () => {
 };
 
 const setupControls = () => {
+    const courseInput = document.getElementById('course-filter');
     const labInput = document.getElementById('lab-filter');
     const projectInput = document.getElementById('project-filter');
     const clearBtn = document.getElementById('clear-search-btn');
-    const closeAllBtn = document.getElementById('close-all-btn');
+
+    courseInput.addEventListener('input', (e) => {
+        courseQuery = e.target.value;
+        renderLabs();
+    });
 
     labInput.addEventListener('input', (e) => {
         labQuery = e.target.value;
@@ -203,23 +271,10 @@ const setupControls = () => {
     });
 
     clearBtn.addEventListener('click', () => {
-        labQuery = "";
-        projectQuery = "";
-        labInput.value = "";
-        projectInput.value = "";
+        courseQuery = ""; labQuery = ""; projectQuery = "";
+        courseInput.value = ""; labInput.value = ""; projectInput.value = "";
         renderLabs();
     });
-
-    if (closeAllBtn) {
-        closeAllBtn.addEventListener('click', () => {
-            document.querySelectorAll('.labo').forEach(lab => lab.classList.remove('active'));
-            localStorage.removeItem('activeLab');
-            // Optional: also clear search when closing all
-            labQuery = "";
-            labInput.value = "";
-            renderLabs();
-        });
-    }
 };
 
 window.addEventListener('load', () => {
