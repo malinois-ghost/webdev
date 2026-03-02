@@ -154,9 +154,12 @@ const toggleLabStorage = (labTitle) => {
 
 const renderLabs = () => {
     const container = document.getElementById('labo-container');
+    const courseInput = document.getElementById('course-filter');
+    const labInput = document.getElementById('lab-filter');
     const projectInput = document.getElementById('project-filter');
     const pageTitle = document.querySelector('h1');
 
+    if (!container) return;
     container.innerHTML = '';
 
     const activeLabs = getActiveLabs();
@@ -189,14 +192,25 @@ const renderLabs = () => {
         return matchesCourse && matchesLab;
     });
 
+    const exampleSource = filteredLabs.length > 0 ? filteredLabs[0] : labs[0];
+    const exCourseNum = exampleSource.course.split(' ').pop();
+    const exLabNum = exampleSource.title.split(' ').pop();
+    const matchingProject = exampleSource.projects.find(p => p.name.toLowerCase().includes(trimmedProjectQuery)) || exampleSource.projects[0];
+    const exProjectName = matchingProject.name;
+
+    if (courseInput) courseInput.placeholder = `Vak (bijv. ${exCourseNum}) of naam...`;
+    if (labInput) labInput.placeholder = `Labo (bijv. ${exLabNum}) of naam...`;
+
+    if (projectInput) {
+        projectInput.style.display = 'inline-block';
+        projectInput.placeholder = `bijv. (${exProjectName})`;
+    }
+
     if (pageTitle) {
         pageTitle.textContent = (trimmedCourseQuery && /^\d+$/.test(trimmedCourseQuery))
             ? `Web Development ${trimmedCourseQuery}`
             : "Web Development";
     }
-
-    projectInput.style.display = 'inline-block';
-    projectInput.placeholder = "Zoek opdracht...";
 
     filteredLabs.forEach(lab => {
         const labDiv = document.createElement('div');
@@ -244,22 +258,26 @@ const setupControls = () => {
     const clearBtn = document.getElementById('clear-search-btn');
     const closeAllBtn = document.getElementById('close-all-btn');
 
-    courseInput.addEventListener('input', (e) => { courseQuery = e.target.value; renderLabs(); });
-    labInput.addEventListener('input', (e) => { labQuery = e.target.value; renderLabs(); });
-    projectInput.addEventListener('input', (e) => { projectQuery = e.target.value; renderLabs(); });
+    if (courseInput) courseInput.addEventListener('input', (e) => { courseQuery = e.target.value; renderLabs(); });
+    if (labInput) labInput.addEventListener('input', (e) => { labQuery = e.target.value; renderLabs(); });
+    if (projectInput) projectInput.addEventListener('input', (e) => { projectQuery = e.target.value; renderLabs(); });
 
-    clearBtn.addEventListener('click', () => {
-        courseQuery = ""; labQuery = ""; projectQuery = "";
-        courseInput.value = ""; labInput.value = ""; projectInput.value = "";
-        renderLabs();
-    });
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            courseQuery = ""; labQuery = ""; projectQuery = "";
+            courseInput.value = ""; labInput.value = ""; projectInput.value = "";
+            renderLabs();
+        });
+    }
 
-    closeAllBtn.addEventListener('click', () => {
-        courseQuery = ""; labQuery = ""; projectQuery = "";
-        courseInput.value = ""; labInput.value = ""; projectInput.value = "";
-        localStorage.removeItem('activeLabs');
-        renderLabs();
-    });
+    if (closeAllBtn) {
+        closeAllBtn.addEventListener('click', () => {
+            courseQuery = ""; labQuery = ""; projectQuery = "";
+            courseInput.value = ""; labInput.value = ""; projectInput.value = "";
+            localStorage.removeItem('activeLabs');
+            renderLabs();
+        });
+    }
 };
 
 window.addEventListener('load', () => {
