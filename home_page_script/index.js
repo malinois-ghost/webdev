@@ -137,7 +137,8 @@ const labs = [
         title: "Labo 16",
         projects: [
             { name: "Invulformulier", url: "labo_16/invulformulier.html" },
-            { name: "Typeof", url: "labo_16/typeof.html" }
+            { name: "Typeof", url: "labo_16/typeof.html" },
+            { name: "Spaties op console", url: "labo_16/spaties_op_console.html" },
         ]
     }
 ];
