@@ -1,0 +1,4 @@
+input {
+    field-sizing: content;
+    min-inline-size: 5ch;
+}

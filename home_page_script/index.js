@@ -131,6 +131,13 @@ const labs = [
             { name: "Kleurenwisselaar", url: "labo_15/kleurenwisselaar.html" },
             { name: "Producten", url: "labo_15/producten.html" },
         ]
+    },
+    {
+        course: "Web Development 1",
+        title: "Labo 16",
+        projects: [
+            { name: "Invulformulier", url: "labo_16/invulformulier.html" },
+        ]
     }
 ];
 
