@@ -386,8 +386,27 @@ const initOrb = () => {
     });
 };
 
+const updateClock = () => {
+    const clockElement = document.getElementById('digital-clock');
+    if (!clockElement) return;
+
+    const now = new Date();
+
+    const dayOptions = { weekday: 'long' };
+    const dayName = new Intl.DateTimeFormat('nl-BE', dayOptions).format(now);
+
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    clockElement.textContent = `${dayName} ${hours}:${minutes}:${seconds}`;
+};
+
+setInterval(updateClock, 1000);
+
 window.addEventListener('load', () => {
     renderLabs();
     setupControls();
     initOrb();
+    updateClock();
 });
