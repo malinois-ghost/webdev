@@ -2,3 +2,7 @@ input {
     field-sizing: content;
     min-inline-size: 5ch;
 }
+
+#getal2{
+    accent-color: black;
+}
