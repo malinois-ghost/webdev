@@ -139,6 +139,7 @@ const labs = [
             { name: "Invulformulier", url: "labo_16/invulformulier.html" },
             { name: "Typeof", url: "labo_16/typeof.html" },
             { name: "Spaties op console", url: "labo_16/spaties_op_console.html" },
+            { name: "Spaties met functies", url: "labo_16/spaties_met_functies.html" },
         ]
     }
 ];
