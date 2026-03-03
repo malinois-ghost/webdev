@@ -254,7 +254,7 @@ h1 {
     font-weight: bold;
     font-size: 1.2rem;
     z-index: 1000;
-    text-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
+    text-shadow: 0 0 8px rgba(255, 0, 0, 1);
     pointer-events: none;
     white-space: nowrap;
 }
