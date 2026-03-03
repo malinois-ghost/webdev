@@ -245,16 +245,18 @@ h1 {
 }
 
 .clock-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
     color: #ff0000;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     font-size: 1.2rem;
     z-index: 1000;
-    text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+    text-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
     pointer-events: none;
+    white-space: nowrap;
 }
 
 @media screen and (min-width: 800px) {
