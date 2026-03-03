@@ -2,12 +2,28 @@
     box-sizing: border-box;
 }
 
+:root {
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+    --torch-intensity: 0;
+}
+
 body {
     margin: 0 auto;
     width: 95%;
-    background-color: #2F3E46;
+    background-color: #0a0e10;
+
+    background-image: radial-gradient(
+            400px circle at var(--mouse-x) var(--mouse-y),
+            rgba(134, 154, 173, var(--torch-intensity)) 0%,
+            rgba(134, 154, 173, 0.04) 35%,
+            transparent 75%
+    );
+
+    background-attachment: fixed;
     font-family: Arial, sans-serif;
     padding-bottom: 50px;
+    transition: background-color 0.3s ease;
 }
 
 h1 {
@@ -70,13 +86,15 @@ h1 {
 }
 
 .labo {
-    background-color: #869AAD;
+    background-color: rgba(134, 154, 173, 0.9);
     border-radius: 8px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     overflow: hidden;
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .labo h2 {
@@ -162,6 +180,68 @@ h1 {
 
 .labo.active .labo-content {
     opacity: 1;
+}
+
+*, *::before, *::after, input, textarea, button, a, h2 {
+    cursor: none !important;
+}
+
+.cursor-orb {
+    width: 20px;
+    height: 20px;
+    background: rgba(134, 154, 173, 0.9);
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 10000;
+    box-shadow:
+            0 0 15px 5px rgba(134, 154, 173, 0.3),
+            0 0 30px 10px rgba(47, 62, 70, 0.1);
+
+    opacity: 0;
+    transform: translate(-50%, -50%);
+
+    transition:
+            opacity 0.3s ease,
+            width 0.2s ease,
+            height 0.2s ease,
+            background-color 0.3s ease,
+            filter 0.2s ease;
+
+    mix-blend-mode: screen;
+}
+
+.cursor-orb.visible {
+    opacity: 1;
+}
+
+.cursor-orb.expanding {
+    width: 35px;
+    height: 35px;
+    background: rgba(163, 181, 199, 0.6);
+    box-shadow: 0 0 20px 8px rgba(134, 154, 173, 0.4);
+}
+
+.cursor-orb.text-mode {
+    width: 2px;
+    height: 22px;
+    border-radius: 2px;
+    background: #ffffff;
+    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.5);
+}
+
+.cursor-orb.clicking {
+    width: 15px;
+    height: 15px;
+    background: #ffffff;
+    transition: width 0.1s, height 0.1s;
+}
+
+.cursor-orb.trailing {
+    filter: blur(2px);
+    opacity: 0.7;
 }
 
 @media screen and (min-width: 800px) { .labo-grid { grid-template-columns: repeat(3, 1fr); } }
