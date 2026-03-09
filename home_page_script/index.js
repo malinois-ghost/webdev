@@ -140,6 +140,7 @@ const labs = [
             { name: "Typeof", url: "labo_16/typeof.html" },
             { name: "Spaties op console", url: "labo_16/spaties_op_console.html" },
             { name: "Spaties met functies", url: "labo_16/spaties_met_functies.html" },
+            { name: "Man van An", url: "labo_16/man_van_an.html" },
         ]
     }
 ];
