@@ -149,6 +149,7 @@ const labs = [
         projects: [
             { name: "Trigrams", url: "labo_17/trigrams.html" },
             { name: "De en Het", url: "labo_17/de_en_het.html" },
+            { name: "Gemeenten", url: "labo_17/gemeenten.html" },
         ]
     },
 ];
