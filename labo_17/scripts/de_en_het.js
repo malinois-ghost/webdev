@@ -8,7 +8,7 @@ const de_en_het = () =>{
     let output = document.getElementsByClassName("output")[0];
     let input = document.getElementsByClassName("text")[0].value.trim().toLowerCase();
 
-    let gewisseld = ""
+    let gewisseld = "";
 
     for(let i = 0; i < input.length; i++){
         if (input[i] === 'd' && input[i + 1] === 'e' && (i === 0 || input[i - 1] === ' ') && (i + 2 === input.length || input[i + 2] === ' ')) {
