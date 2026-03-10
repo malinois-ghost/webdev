@@ -142,7 +142,14 @@ const labs = [
             { name: "Spaties met functies", url: "labo_16/spaties_met_functies.html" },
             { name: "Man van An", url: "labo_16/man_van_an.html" },
         ]
-    }
+    },
+    {
+        course: "Web Development 1",
+        title: "Labo 17",
+        projects: [
+            { name: "Trigrams", url: "labo_17/trigrams.html" },
+        ]
+    },
 ];
 
 let courseQuery = "";
