@@ -4,8 +4,6 @@ const setup = () => {
 
     array.push(input);
 
-    let output = document.getElementsByClassName("output")[0];
-
     while(input !== "stop"){
         input = window.prompt("Geef gemeentes op", "stop").trim().toLowerCase();
         array.push(input) ;
