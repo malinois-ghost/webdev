@@ -1,4 +1,7 @@
 const initOrb = () => {
+    // Don't run on touch devices at all
+    if (window.matchMedia('(hover: none)').matches) return;
+
     let orb = document.querySelector('.cursor-orb');
     if (!orb) {
         orb = document.createElement('div');
@@ -75,14 +78,17 @@ const initOrb = () => {
         const target = e.target;
         if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
             orb.classList.add('text-mode');
+            orb.classList.remove('expanding');
         } else if (target.closest('a, button, .labo h2, #clear-search-btn, #close-all-btn')) {
             orb.classList.add('expanding');
+            orb.classList.remove('text-mode');
+        } else {
+            orb.classList.remove('text-mode', 'expanding');
         }
     });
 
     document.addEventListener('mouseout', (e) => {
-        const related = e.relatedTarget;
-        if (!related || !related.closest('a, button, .labo h2, input, textarea')) {
+        if (!e.relatedTarget) {
             orb.classList.remove('text-mode', 'expanding');
         }
     });

@@ -278,3 +278,9 @@ h1 {
 @media screen and (min-width: 1200px) {
     .labo-grid { grid-template-columns: repeat(5, 1fr); }
 }
+
+@media (hover: hover) {
+    *, *::before, *::after, input, textarea, button, a, h2 {
+        cursor: none !important;
+    }
+}

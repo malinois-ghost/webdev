@@ -93,10 +93,10 @@ const updateUITheme = (rgb) => {
         setUIVars(
             rgb.map(c => darken(c, 140)),
             rgb.map(c => darken(c, 90)),
-            rgb.map(c => lighten(c, 20)),
-            rgb.map(c => lighten(c, 35))
+            rgb.map(c => lighten(c, 60)),   // was 20
+            rgb.map(c => lighten(c, 40))    // was 35
         );
-        f2('--ui-text-hero', rgb.map(c => darken(c, 140)));
+        f2('--ui-text-hero', rgb.map(c => lighten(c, 60)));
     }
 };
 
