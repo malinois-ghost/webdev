@@ -236,6 +236,8 @@ const updateUITheme = (rgb) => {
         document.documentElement.style.setProperty('--ui-text-muted',  f(tm));
     };
 
+    const f2 = (name, c) => document.documentElement.style.setProperty(name, `rgb(${c[0]},${c[1]},${c[2]})`);
+
     if (t > 0.45) {
         setUIVars(
             rgb.map(c => lighten(c, 140)),
@@ -243,6 +245,7 @@ const updateUITheme = (rgb) => {
             rgb.map(c => darken(c, 30)),
             rgb.map(c => darken(c, 50))
         );
+        f2('--ui-text-hero', rgb.map(c => lighten(c, 140))); // opposite of lab text
     } else {
         setUIVars(
             rgb.map(c => darken(c, 140)),
@@ -250,6 +253,7 @@ const updateUITheme = (rgb) => {
             rgb.map(c => lighten(c, 20)),
             rgb.map(c => lighten(c, 35))
         );
+        f2('--ui-text-hero', rgb.map(c => darken(c, 140))); // opposite of lab text
     }
 };
 
