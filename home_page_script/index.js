@@ -151,7 +151,7 @@ const labs = [
             { name: "De en Het", url: "labo_17/de_en_het.html" },
             { name: "Gemeenten", url: "labo_17/gemeenten.html" },
             { name: "Formvoorwaarden", url: "labo_17/formvoorwaarden.html" },
-            { name: "Formvalidatie", url: "labo_17/formvalidaties.html" },
+            { name: "Formvalidatie", url: "labo_17/formvalidatie.html" },
         ]
     },
 ];
