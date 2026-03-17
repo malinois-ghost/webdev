@@ -7,17 +7,33 @@
     <link href="home_page_style/index.css" rel="stylesheet">
 </head>
 <body>
-<h1>Web Development</h1>
 
-<div id="digital-clock" class="clock-container"></div>
+<!-- Fullscreen canvas for all sky effects: stars, sun, moon, clouds, rain, god rays, birds -->
+<canvas id="sky-canvas"></canvas>
+
+<!-- Horizon gradient overlay -->
+<div id="horizon"></div>
+
+<h1 id="page-title">Web Development</h1>
+
+<div class="clock-container" id="clock-container">
+    <span id="digital-clock"></span>
+    <span class="clock-divider">·</span>
+    <span id="solar-clock" title="True solar time"></span>
+    <span class="clock-divider">·</span>
+    <span id="weather-icon" title=""></span>
+</div>
 
 <div class="search-container">
     <div class="filter-group">
-        <label for="course-filter"></label><input type="text" id="course-filter" placeholder="Vak (bijv. ...) of naam...">
+        <label for="course-filter"></label>
+        <input type="text" id="course-filter" placeholder="Vak (bijv. ...) of naam...">
 
-        <label for="lab-filter"></label><input type="text" id="lab-filter" placeholder="Labo (bijv. ...) of naam...">
+        <label for="lab-filter"></label>
+        <input type="text" id="lab-filter" placeholder="Labo (bijv. ...) of naam...">
 
-        <label for="project-filter"></label><input type="text" id="project-filter" placeholder="..." style="display: none;">
+        <label for="project-filter"></label>
+        <input type="text" id="project-filter" placeholder="..." style="display: none;">
 
         <button id="clear-search-btn">Wis filters</button>
     </div>
@@ -29,9 +45,15 @@
 
 <div class="cursor-orb"></div>
 
+<!-- Load order matters: canvas → sky → celestial → atmosphere → weather → orb → clock → index -->
+<script src="home_page_script/canvas.js"></script>
 <script src="home_page_script/sky.js"></script>
+<script src="home_page_script/celestial.js"></script>
+<script src="home_page_script/atmosphere.js"></script>
+<script src="home_page_script/weather.js"></script>
 <script src="home_page_script/orb.js"></script>
 <script src="home_page_script/clock.js"></script>
 <script src="home_page_script/index.js"></script>
+
 </body>
 </html>

@@ -1,27 +1,44 @@
-let _userLat = 51.5;
+let _userLat             = 51.5;
 let _longitudeCorrection = 0;
-let _torchMax = 0;
+let _torchMax            = 0;
+let _lastSolarData       = { elevation: -90, azimuth: 180 };
 
-// ─── Solar Elevation ──────────────────────────────────────────────────────────
+// ─── Solar Position ───────────────────────────────────────────────────────────
 
-const getSolarElevation = () => {
-    const now = new Date();
+const getSolarPosition = () => {
+    const now   = new Date();
     const hours = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600 + _longitudeCorrection;
 
     const startOfYear = new Date(now.getFullYear(), 0, 0);
-    const dayOfYear = Math.floor((now - startOfYear) / 86400000);
+    const dayOfYear   = Math.floor((now - startOfYear) / 86400000);
 
     const declination = 23.45 * Math.sin((2 * Math.PI / 365) * (dayOfYear - 81));
-    const hourAngle = (hours - 12) * 15;
+    const hourAngle   = (hours - 12) * 15;
 
-    const latRad  = _userLat * Math.PI / 180;
+    const latRad  = _userLat    * Math.PI / 180;
     const declRad = declination * Math.PI / 180;
-    const haRad   = hourAngle * Math.PI / 180;
+    const haRad   = hourAngle   * Math.PI / 180;
 
-    return Math.asin(
-        Math.sin(latRad) * Math.sin(declRad) +
-        Math.cos(latRad) * Math.cos(declRad) * Math.cos(haRad)
-    ) * 180 / Math.PI;
+    const sinElev  = Math.sin(latRad) * Math.sin(declRad) +
+        Math.cos(latRad) * Math.cos(declRad) * Math.cos(haRad);
+    const elevation = Math.asin(Math.max(-1, Math.min(1, sinElev))) * 180 / Math.PI;
+
+    const cosElev = Math.sqrt(Math.max(0, 1 - sinElev * sinElev));
+    const cosAz   = (Math.sin(declRad) - Math.sin(latRad) * sinElev) /
+        (Math.cos(latRad) * cosElev + 1e-10);
+    let azimuth   = Math.acos(Math.max(-1, Math.min(1, cosAz))) * 180 / Math.PI;
+    if (hourAngle > 0) azimuth = 360 - azimuth;
+
+    return { elevation, azimuth };
+};
+const getTrueSolarTime = () => {
+    const now   = new Date();
+    const hours = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600 + _longitudeCorrection;
+    const total = ((hours % 24) + 24) % 24;
+    const h     = Math.floor(total);
+    const m     = Math.floor((total - h) * 60);
+    const s     = Math.floor(((total - h) * 60 - m) * 60);
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 };
 
 // ─── Sky Colour ───────────────────────────────────────────────────────────────
@@ -50,7 +67,6 @@ const SKY_STOPS = [
 const getSkyColorRgb = (elevation) => {
     if (elevation <= SKY_STOPS[0].elev) return SKY_STOPS[0].color;
     if (elevation >= SKY_STOPS[SKY_STOPS.length - 1].elev) return SKY_STOPS[SKY_STOPS.length - 1].color;
-
     for (let i = 0; i < SKY_STOPS.length - 1; i++) {
         const a = SKY_STOPS[i], b = SKY_STOPS[i + 1];
         if (elevation >= a.elev && elevation <= b.elev) {
@@ -64,7 +80,7 @@ const getSkyColorRgb = (elevation) => {
 
 const updateUITheme = (rgb) => {
     const brightness = 0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2];
-    const t = brightness / 255;
+    const t          = brightness / 255;
 
     document.documentElement.style.setProperty('--sky-brightness', t.toFixed(3));
 
@@ -79,7 +95,14 @@ const updateUITheme = (rgb) => {
         document.documentElement.style.setProperty('--ui-text-muted',  f(tm));
     };
 
-    const f2 = (name, c) => document.documentElement.style.setProperty(name, `rgb(${c[0]},${c[1]},${c[2]})`);
+    const f2 = (name, c) =>
+        document.documentElement.style.setProperty(name, `rgb(${c[0]},${c[1]},${c[2]})`);
+
+    const glowStrength = Math.max(0, 1 - t / 0.45);
+    document.documentElement.style.setProperty('--ui-glow',
+        `rgba(255,255,255,${(glowStrength * 0.15).toFixed(3)})`);
+    document.documentElement.style.setProperty('--ui-glow-text',
+        `rgba(255,255,255,${(glowStrength * 0.5).toFixed(3)})`);
 
     if (t > 0.45) {
         setUIVars(
@@ -93,8 +116,8 @@ const updateUITheme = (rgb) => {
         setUIVars(
             rgb.map(c => darken(c, 140)),
             rgb.map(c => darken(c, 90)),
-            rgb.map(c => lighten(c, 60)),   // was 20
-            rgb.map(c => lighten(c, 40))    // was 35
+            rgb.map(c => lighten(c, 60)),
+            rgb.map(c => lighten(c, 40))
         );
         f2('--ui-text-hero', rgb.map(c => lighten(c, 60)));
     }
@@ -103,12 +126,27 @@ const updateUITheme = (rgb) => {
 // ─── Sky Update ───────────────────────────────────────────────────────────────
 
 const updateSky = () => {
-    const elevation = getSolarElevation();
-    const rgb = getSkyColorRgb(elevation);
+    const { elevation, azimuth } = getSolarPosition();
+    _lastSolarData = { elevation, azimuth };
 
+    const rgb = getSkyColorRgb(elevation);
     document.body.style.backgroundColor = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
 
     updateUITheme(rgb);
+
+    // Horizon warm glow near sunrise/sunset
+    let horizonColor = 'transparent';
+    if (elevation > -5 && elevation < 15) {
+        const t = (elevation + 5) / 20;
+        const r = Math.round(255 - t * 100);
+        const g = Math.round(160 - t * 60);
+        const b = Math.round(80  + t * 80);
+        const a = (0.3 * (1 - Math.abs(t - 0.5) * 1.8)).toFixed(3);
+        horizonColor = `rgba(${r},${g},${b},${a})`;
+    } else if (elevation >= 15) {
+        horizonColor = `rgba(180,210,255,0.10)`;
+    }
+    document.documentElement.style.setProperty('--horizon-color', horizonColor);
 
     const torchMax = elevation < 8
         ? Math.min(1, Math.max(0, (8 - elevation) / 13))
@@ -126,26 +164,4 @@ const updateSky = () => {
 };
 
 // ─── Geolocation ─────────────────────────────────────────────────────────────
-
-const initGeolocation = () => {
-    if (!navigator.geolocation) return;
-
-    navigator.geolocation.getCurrentPosition(
-        (pos) => {
-            _userLat = pos.coords.latitude;
-
-            const tzOffsetHours    = -new Date().getTimezoneOffset() / 60;
-            const solarOffsetHours = pos.coords.longitude / 15;
-            _longitudeCorrection   = solarOffsetHours - tzOffsetHours;
-
-            updateSky();
-        },
-        () => {
-            _userLat = 51.5;
-            _longitudeCorrection = 0;
-        },
-        { timeout: 8000 }
-    );
-};
-
 setInterval(updateSky, 60000);

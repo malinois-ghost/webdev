@@ -1,6 +1,7 @@
 const updateClock = () => {
-    const clockElement = document.getElementById('digital-clock');
-    if (!clockElement) return;
+    const clockEl = document.getElementById('digital-clock');
+    const solarEl = document.getElementById('solar-clock');
+    if (!clockEl) return;
 
     const now     = new Date();
     const dayName = new Intl.DateTimeFormat('en-GB', { weekday: 'long' }).format(now);
@@ -8,7 +9,11 @@ const updateClock = () => {
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
 
-    clockElement.textContent = `${dayName} ${hours}:${minutes}:${seconds}`;
+    clockEl.textContent = `${dayName} ${hours}:${minutes}:${seconds}`;
+
+    if (solarEl) {
+        solarEl.textContent = `☀ ${getTrueSolarTime()}`;
+    }
 };
 
 setInterval(updateClock, 1000);

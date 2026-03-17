@@ -1,5 +1,5 @@
 const initOrb = () => {
-    // Don't run on touch devices at all
+    // Skip entirely on touch-only devices
     if (window.matchMedia('(hover: none)').matches) return;
 
     let orb = document.querySelector('.cursor-orb');

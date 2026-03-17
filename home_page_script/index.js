@@ -156,8 +156,8 @@ const labs = [
     },
 ];
 
-let courseQuery = "";
-let labQuery = "";
+let courseQuery  = "";
+let labQuery     = "";
 let projectQuery = "";
 
 // ─── Lab Storage ─────────────────────────────────────────────────────────────
@@ -168,16 +168,14 @@ const getActiveLabs = () => {
 };
 
 const toggleLabStorage = (labTitle) => {
-    let activeLabs = getActiveLabs();
-    if (activeLabs.includes(labTitle)) {
-        activeLabs = activeLabs.filter(title => title !== labTitle);
-    } else {
-        activeLabs.push(labTitle);
-    }
-    localStorage.setItem('activeLabs', JSON.stringify(activeLabs));
+    let active = getActiveLabs();
+    active = active.includes(labTitle)
+        ? active.filter(t => t !== labTitle)
+        : [...active, labTitle];
+    localStorage.setItem('activeLabs', JSON.stringify(active));
 };
 
-// ─── Render ───────────────────────────────────────────────────────────────────
+// ─── Render labs ──────────────────────────────────────────────────────────────
 
 const renderLabs = () => {
     const container    = document.getElementById('labo-container');
@@ -198,8 +196,8 @@ const renderLabs = () => {
         let matchesCourse = true;
         if (trimmedCourseQuery !== "") {
             const isNumeric    = /^\d+$/.test(trimmedCourseQuery);
-            const courseParts  = lab.course.toLowerCase().split(' ');
-            const courseNumStr = courseParts[courseParts.length - 1];
+            const parts        = lab.course.toLowerCase().split(' ');
+            const courseNumStr = parts[parts.length - 1];
             matchesCourse = isNumeric
                 ? courseNumStr === trimmedCourseQuery
                 : lab.course.toLowerCase().includes(trimmedCourseQuery);
@@ -207,43 +205,35 @@ const renderLabs = () => {
 
         let matchesLab = true;
         if (trimmedLabQuery !== "") {
-            const isNumeric  = /^\d+$/.test(trimmedLabQuery);
-            const titleParts = lab.title.toLowerCase().split(' ');
-            const labNumStr  = titleParts[titleParts.length - 1];
+            const isNumeric = /^\d+$/.test(trimmedLabQuery);
+            const parts     = lab.title.toLowerCase().split(' ');
+            const labNumStr = parts[parts.length - 1];
             matchesLab = isNumeric
                 ? labNumStr === trimmedLabQuery
                 : lab.title.toLowerCase().includes(trimmedLabQuery);
         }
 
         if (trimmedProjectQuery !== "") {
-            const hasMatchingProject = lab.projects.some(p =>
-                p.name.toLowerCase().includes(trimmedProjectQuery)
-            );
-            return matchesCourse && matchesLab && hasMatchingProject;
+            return matchesCourse && matchesLab &&
+                lab.projects.some(p => p.name.toLowerCase().includes(trimmedProjectQuery));
         }
 
         return matchesCourse && matchesLab;
     });
 
-    const exampleSource = filteredLabs.length > 0 ? filteredLabs[0] : labs[0];
-    const exCourseNum   = exampleSource.course.split(' ').pop();
-    const exLabNum      = exampleSource.title.split(' ').pop();
-    const matchingProject =
-        exampleSource.projects.find(p => p.name.toLowerCase().includes(trimmedProjectQuery)) ||
-        exampleSource.projects[0];
-    const exProjectName = matchingProject.name;
+    const ex  = filteredLabs.length > 0 ? filteredLabs[0] : labs[0];
+    const mp  = ex.projects.find(p => p.name.toLowerCase().includes(trimmedProjectQuery)) || ex.projects[0];
 
-    if (courseInput)  courseInput.placeholder  = `Vak (bijv. ${exCourseNum}) of naam...`;
-    if (labInput)     labInput.placeholder     = `Labo (bijv. ${exLabNum}) of naam...`;
-
+    if (courseInput)  courseInput.placeholder  = `Vak (bijv. ${ex.course.split(' ').pop()}) of naam...`;
+    if (labInput)     labInput.placeholder     = `Labo (bijv. ${ex.title.split(' ').pop()}) of naam...`;
     if (projectInput) {
         projectInput.style.display = 'inline-block';
-        projectInput.placeholder   = `bijv. (${exProjectName})`;
+        projectInput.placeholder   = `bijv. (${mp.name})`;
     }
 
     if (pageTitle) {
         const match = trimmedCourseQuery.match(/\d+/);
-        pageTitle.textContent = match ? `Web Development ${match[0]}` : "Web Development";
+        pageTitle.textContent = match ? `Web Development ${match[0]}` : 'Web Development';
     }
 
     filteredLabs.forEach(lab => {
@@ -258,13 +248,14 @@ const renderLabs = () => {
         if (shouldBeOpen) labDiv.classList.add('active');
 
         const title = document.createElement('h2');
-        title.innerHTML = `<span>${lab.title}</span><small style="font-size: 0.6em; opacity: 0.7; margin-left: 10px;">${lab.course}</small>`;
+        title.innerHTML = `<span>${lab.title}</span>
+            <small style="font-size:0.6em;opacity:0.7;margin-left:10px;">${lab.course}</small>`;
 
         const contentDiv = document.createElement('div');
         contentDiv.className = 'labo-content';
 
         lab.projects
-            .filter(proj => proj.name.toLowerCase().includes(trimmedProjectQuery))
+            .filter(p => p.name.toLowerCase().includes(trimmedProjectQuery))
             .forEach(project => {
                 const btn = document.createElement('a');
                 btn.href        = project.url;
@@ -293,9 +284,9 @@ const setupControls = () => {
     const clearBtn     = document.getElementById('clear-search-btn');
     const closeAllBtn  = document.getElementById('close-all-btn');
 
-    if (courseInput)  courseInput.addEventListener('input',  (e) => { courseQuery  = e.target.value; renderLabs(); });
-    if (labInput)     labInput.addEventListener('input',     (e) => { labQuery     = e.target.value; renderLabs(); });
-    if (projectInput) projectInput.addEventListener('input', (e) => { projectQuery = e.target.value; renderLabs(); });
+    if (courseInput)  courseInput.addEventListener('input',  e => { courseQuery  = e.target.value; renderLabs(); });
+    if (labInput)     labInput.addEventListener('input',     e => { labQuery     = e.target.value; renderLabs(); });
+    if (projectInput) projectInput.addEventListener('input', e => { projectQuery = e.target.value; renderLabs(); });
 
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
@@ -315,13 +306,70 @@ const setupControls = () => {
     }
 };
 
+// ─── Master render loop ───────────────────────────────────────────────────────
+
+const masterLoop = (timestamp) => {
+    const t   = timestamp / 1000;
+    const ctx = getCtx();
+    const cv  = getCanvas();
+
+    if (ctx && cv) {
+        ctx.clearRect(0, 0, cv.width, cv.height);
+
+        const { elevation, azimuth } = _lastSolarData;
+
+        // Canvas-drawn: stars and god rays
+        drawStars(ctx, cv.width, cv.height, elevation, t);
+        drawGodRays(ctx, cv.width, cv.height, elevation, azimuth);
+
+        // DOM element updates: sun + moon PNGs (also stores _moonState for glow)
+        updateCelestialElements(cv.width, cv.height, elevation, azimuth);
+
+        // Canvas-drawn: moon glow halo (drawn after PNG position is known)
+        drawMoonGlow(ctx);
+
+        // DOM element updates: cloud PNGs (also advances cloud positions)
+        updateClouds(elevation);
+
+        // Canvas-drawn: rain, snow, lightning, birds, bats
+        updateAtmosphere(t);
+        renderAtmosphere(ctx, cv.width, cv.height, elevation);
+    }
+
+    requestAnimationFrame(masterLoop);
+};
+
 // ─── Init ────────────────────────────────────────────────────────────────────
 
 window.addEventListener('load', () => {
+    initCanvas();
     renderLabs();
     setupControls();
-    initOrb();       // orb.js
-    updateClock();   // clock.js
-    updateSky();     // sky.js
-    initGeolocation(); // sky.js
+    initOrb();
+    updateClock();
+    updateSky();
+    initStars();
+    initAtmosphere();           // creates cloud DOM elements + rain/snow arrays
+    initCelestialElements();    // creates sun + moon DOM elements
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                _userLat             = pos.coords.latitude;
+                _longitudeCorrection = pos.coords.longitude / 15 - (-new Date().getTimezoneOffset() / 60);
+                updateSky();
+                initWeatherWithCoords(pos.coords.latitude, pos.coords.longitude);
+            },
+            () => {
+                _userLat             = 51.5;
+                _longitudeCorrection = 0;
+                initWeather();
+            },
+            { timeout: 8000 }
+        );
+    } else {
+        initWeather();
+    }
+
+    requestAnimationFrame(masterLoop);
 });
