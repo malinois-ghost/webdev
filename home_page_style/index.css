@@ -6,6 +6,13 @@
     --mouse-x: 50%;
     --mouse-y: 50%;
     --torch-intensity: 0;
+    --sky-brightness: 0;
+
+    --ui-surface:     #1a2a35;
+    --ui-surface-alt: #243545;
+    --ui-text:        #c8d8e8;
+    --ui-text-muted:  #7a9ab0;
+    --ui-accent:      #cf4444;
 }
 
 body {
@@ -23,13 +30,15 @@ body {
     background-attachment: fixed;
     font-family: Arial, sans-serif;
     padding-bottom: 50px;
-    transition: background-color 0.3s ease;
+    transition: background-color 1s ease;
 }
 
 h1 {
     text-align: center;
-    color: #869AAD;
+    color: var(--ui-text);
     margin: 40px 0;
+    transition: color 1s ease;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.3);
 }
 
 .search-container {
@@ -48,34 +57,35 @@ h1 {
 }
 
 .filter-group input {
-    background-color: #869AAD;
-    border: 2px solid #758a9d;
+    background-color: var(--ui-surface);
+    border: 2px solid var(--ui-surface-alt);
     border-radius: 5px;
     padding: 10px 15px;
-    color: #2F3E46;
+    color: var(--ui-text);
     font-weight: bold;
     outline: none;
     flex: 1;
     min-width: 200px;
+    transition: background-color 1s ease, color 1s ease, border-color 1s ease;
 }
 
 .filter-group input::placeholder {
-    color: #4a5d68;
+    color: var(--ui-text-muted);
 }
 
 #clear-search-btn {
-    background-color: #758a9d;
-    color: #2F3E46;
-    border: none;
+    background-color: var(--ui-surface);
+    color: var(--ui-text);
+    border: 1px solid var(--ui-text-muted);
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-    transition: background 0.2s;
+    transition: background-color 0.2s, color 1s ease;
 }
 
 #clear-search-btn:hover {
-    background-color: #9db2c5;
+    background-color: var(--ui-surface-alt);
 }
 
 .labo-grid {
@@ -86,32 +96,32 @@ h1 {
 }
 
 .labo {
-    background-color: rgba(134, 154, 173, 0.9);
+    background-color: var(--ui-surface);
     border-radius: 8px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     overflow: hidden;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 1s ease;
     backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--ui-surface-alt);
 }
 
 .labo h2 {
     margin: 0;
     padding: 15px 20px;
-    color: #2F3E46;
+    color: var(--ui-text);
     font-size: 1.2rem;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #869AAD;
-    transition: background-color 0.2s;
+    background-color: var(--ui-surface);
+    transition: background-color 0.2s, color 1s ease;
     user-select: none;
 }
 
-.labo h2:hover { background-color: #758a9d; }
+.labo h2:hover { background-color: var(--ui-surface-alt); }
 
 .labo h2::after {
     content: '▼';
@@ -124,29 +134,33 @@ h1 {
 .labo-content {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease-out;
-    background-color: #758a9d;
+    transition: max-height 0.4s ease-out, opacity 0.3s ease, background-color 1s ease;
+    background-color: var(--ui-surface-alt);
+    opacity: 0;
 }
 
-.labo.active .labo-content { max-height: 800px; }
+.labo.active .labo-content {
+    max-height: 800px;
+    opacity: 1;
+}
 
 .project-btn {
     display: block;
-    background-color: #2F3E46;
-    color: white;
+    background-color: var(--ui-surface);
+    color: var(--ui-text);
     text-decoration: none;
     padding: 12px 20px;
     margin: 10px 15px;
     border-radius: 5px;
     text-align: center;
-    transition: all 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out, color 1s ease, transform 0.2s ease-in-out;
     font-weight: bold;
     border-left: 4px solid transparent;
 }
 
 .project-btn:hover {
-    background-color: #3d505a;
-    border-left: 4px solid #cf4444;
+    background-color: var(--ui-surface-alt);
+    border-left: 4px solid var(--ui-accent);
     transform: translateX(5px);
 }
 
@@ -154,7 +168,7 @@ h1 {
     position: fixed;
     bottom: 20px;
     left: 20px;
-    background-color: #cf4444;
+    background-color: var(--ui-accent);
     color: white;
     border: none;
     padding: 12px 20px;
@@ -163,6 +177,11 @@ h1 {
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     z-index: 1000;
+    transition: background-color 0.2s;
+}
+
+#close-all-btn:hover {
+    background-color: #e05555;
 }
 
 .project-btn:active,
@@ -171,15 +190,6 @@ h1 {
 .labo h2:active {
     transform: scale(0.96);
     transition: transform 0.1s;
-}
-
-.labo-content {
-    opacity: 0;
-    transition: max-height 0.4s ease-in-out, opacity 0.3s ease;
-}
-
-.labo.active .labo-content {
-    opacity: 1;
 }
 
 *, *::before, *::after, input, textarea, button, a, h2 {
@@ -249,14 +259,15 @@ h1 {
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
-    color: #869AAD;
+    color: var(--ui-text);
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
     font-size: 1.2rem;
     z-index: 1000;
-    text-shadow: 0 0 8px rgba(255, 0, 0, 1);
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
     pointer-events: none;
     white-space: nowrap;
+    transition: color 1s ease;
 }
 
 @media screen and (min-width: 800px) {
