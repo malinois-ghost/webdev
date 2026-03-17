@@ -16,6 +16,7 @@
     --ui-text-hero:   #ddeeff;
     --ui-glow:        rgba(0,0,0,0);
     --ui-glow-text:   rgba(0,0,0,0);
+    --horizon-color:  rgba(0,0,0,0);
 }
 
 /* ─── Canvas & layering ───────────────────────────────────────────────────── */
