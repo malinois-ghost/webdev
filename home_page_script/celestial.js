@@ -141,7 +141,7 @@ const _makeImgEl = (src, size, id) => {
     return img;
 };
 
-const SUN_PNG_SRC = 'assets/sun.png';
+const SUN_PNG_SRC = 'assets/sun/sun.png';
 
 const initCelestialElements = () => {
     _preloadMoonPhases();
