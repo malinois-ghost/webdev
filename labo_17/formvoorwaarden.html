@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Formvoorwaarden</title>
+    <link rel="stylesheet" href="styles/formvoorwaarden.css">
+</head>
+<body>
+<div class="row">
+    <span class="label">Is roker</span>
+    <label for="roker"></label><input type="checkbox" id="roker">
+</div>
+
+<div class="row">
+    <span class="label">Moedertaal</span>
+    <input type="radio" name="taal" value="nl" id="nl"> <label for="nl">Nederlands</label>
+    <input type="radio" name="taal" value="fr" id="fr" checked> <label for="fr">Frans</label>
+    <input type="radio" name="taal" value="en" id="en"> <label for="en">Engels</label>
+</div>
+
+<div class="row">
+    <span class="label">Favoriete buurland</span>
+    <label for="buurland"></label><select id="buurland">
+        <option value="Nederland">Nederland</option>
+        <option value="Frankrijk" selected>Frankrijk</option>
+        <option value="Duitsland">Duitsland</option>
+    </select>
+</div>
+
+<div class="row">
+    <span class="label">Bestelling</span>
+    <label for="bestelling"></label><select id="bestelling" multiple>
+        <option value="aardappelen">aardappelen</option>
+        <option value="brood">brood</option>
+        <option value="melk">melk</option>
+        <option value="biefstuk">biefstuk</option>
+        <option value="chips">chips</option>
+        <option value="krant">krant</option>
+    </select>
+</div>
+
+<button class="btn">Toon resultaat</button>
+
+<script src="scripts/formvoorwaarden.js"></script>
+
+</body>
+</html>

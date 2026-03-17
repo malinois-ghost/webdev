@@ -150,6 +150,7 @@ const labs = [
             { name: "Trigrams", url: "labo_17/trigrams.html" },
             { name: "De en Het", url: "labo_17/de_en_het.html" },
             { name: "Gemeenten", url: "labo_17/gemeenten.html" },
+            { name: "Formvoorwaarden", url: "labo_17/formvoorwaarden.html" },
         ]
     },
 ];
