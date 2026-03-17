@@ -159,150 +159,6 @@ const labs = [
 let courseQuery = "";
 let labQuery = "";
 let projectQuery = "";
-let _userLat = 51.5;
-let _longitudeCorrection = 0;
-let _torchMax = 0;
-
-// ─── Sky & Torch ─────────────────────────────────────────────────────────────
-
-const getSolarElevation = () => {
-    const now = new Date();
-    const hours = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600 + _longitudeCorrection;
-
-    const startOfYear = new Date(now.getFullYear(), 0, 0);
-    const dayOfYear = Math.floor((now - startOfYear) / 86400000);
-
-    const declination = 23.45 * Math.sin((2 * Math.PI / 365) * (dayOfYear - 81));
-    const hourAngle = (hours - 12) * 15;
-
-    const latRad  = _userLat * Math.PI / 180;
-    const declRad = declination * Math.PI / 180;
-    const haRad   = hourAngle * Math.PI / 180;
-
-    return Math.asin(
-        Math.sin(latRad) * Math.sin(declRad) +
-        Math.cos(latRad) * Math.cos(declRad) * Math.cos(haRad)
-    ) * 180 / Math.PI;
-};
-
-const lerpColor = (a, b, t) => [
-    Math.round(a[0] + t * (b[0] - a[0])),
-    Math.round(a[1] + t * (b[1] - a[1])),
-    Math.round(a[2] + t * (b[2] - a[2])),
-];
-
-const SKY_STOPS = [
-    { elev: -18, color: [4,   6,  18] },
-    { elev:  -8, color: [8,  10,  35] },
-    { elev:  -4, color: [22,  18,  65] },
-    { elev:  -1, color: [70,  40, 100] },
-    { elev:   0, color: [190,  85,  40] },
-    { elev:   2, color: [215, 120,  55] },
-    { elev:   5, color: [230, 160,  80] },
-    { elev:  10, color: [115, 170, 215] },
-    { elev:  20, color: [70,  135, 205] },
-    { elev:  35, color: [48,  110, 190] },
-    { elev:  55, color: [32,   90, 175] },
-    { elev:  90, color: [20,   70, 155] },
-];
-
-const getSkyColorRgb = (elevation) => {
-    if (elevation <= SKY_STOPS[0].elev) return SKY_STOPS[0].color;
-    if (elevation >= SKY_STOPS[SKY_STOPS.length - 1].elev) return SKY_STOPS[SKY_STOPS.length - 1].color;
-
-    for (let i = 0; i < SKY_STOPS.length - 1; i++) {
-        const a = SKY_STOPS[i], b = SKY_STOPS[i + 1];
-        if (elevation >= a.elev && elevation <= b.elev) {
-            const t = (elevation - a.elev) / (b.elev - a.elev);
-            return lerpColor(a.color, b.color, t);
-        }
-    }
-};
-
-const updateUITheme = (rgb) => {
-    const brightness = 0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2];
-    const t = brightness / 255;
-
-    document.documentElement.style.setProperty('--sky-brightness', t.toFixed(3));
-
-    const darken  = (c, amt) => Math.max(0,   Math.min(255, c - amt));
-    const lighten = (c, amt) => Math.max(0,   Math.min(255, c + amt));
-
-    const setUIVars = (s, s2, tx, tm) => {
-        const f = c => `rgb(${c[0]},${c[1]},${c[2]})`;
-        document.documentElement.style.setProperty('--ui-surface',     f(s));
-        document.documentElement.style.setProperty('--ui-surface-alt', f(s2));
-        document.documentElement.style.setProperty('--ui-text',        f(tx));
-        document.documentElement.style.setProperty('--ui-text-muted',  f(tm));
-    };
-
-    const f2 = (name, c) => document.documentElement.style.setProperty(name, `rgb(${c[0]},${c[1]},${c[2]})`);
-
-    if (t > 0.45) {
-        setUIVars(
-            rgb.map(c => lighten(c, 140)),
-            rgb.map(c => lighten(c, 90)),
-            rgb.map(c => darken(c, 30)),
-            rgb.map(c => darken(c, 50))
-        );
-        f2('--ui-text-hero', rgb.map(c => lighten(c, 140))); // opposite of lab text
-    } else {
-        setUIVars(
-            rgb.map(c => darken(c, 140)),
-            rgb.map(c => darken(c, 90)),
-            rgb.map(c => lighten(c, 20)),
-            rgb.map(c => lighten(c, 35))
-        );
-        f2('--ui-text-hero', rgb.map(c => darken(c, 140))); // opposite of lab text
-    }
-};
-
-const updateSky = () => {
-    const elevation = getSolarElevation();
-    const rgb = getSkyColorRgb(elevation);
-
-    document.body.style.backgroundColor = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
-
-    updateUITheme(rgb);
-
-    const torchMax = elevation < 8
-        ? Math.min(1, Math.max(0, (8 - elevation) / 13))
-        : 0;
-
-    _torchMax = torchMax;
-    document.documentElement.style.setProperty('--torch-max', torchMax.toFixed(3));
-
-    const currentIntensity = parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue('--torch-intensity') || '0'
-    );
-    if (currentIntensity > torchMax) {
-        document.documentElement.style.setProperty('--torch-intensity', '0');
-    }
-};
-
-// ─── Geolocation ─────────────────────────────────────────────────────────────
-
-const initGeolocation = () => {
-    if (!navigator.geolocation) return;
-
-    navigator.geolocation.getCurrentPosition(
-        (pos) => {
-            _userLat = pos.coords.latitude;
-
-            const tzOffsetHours  = -new Date().getTimezoneOffset() / 60;
-            const solarOffsetHours = pos.coords.longitude / 15;
-            _longitudeCorrection = solarOffsetHours - tzOffsetHours;
-
-            updateSky();
-        },
-        () => {
-            // Permission denied or unavailable — stay on UK default
-            _userLat = 51.5;
-            _longitudeCorrection = 0;
-        },
-        { timeout: 8000 }
-    );
-};
 
 // ─── Lab Storage ─────────────────────────────────────────────────────────────
 
@@ -411,8 +267,8 @@ const renderLabs = () => {
             .filter(proj => proj.name.toLowerCase().includes(trimmedProjectQuery))
             .forEach(project => {
                 const btn = document.createElement('a');
-                btn.href      = project.url;
-                btn.className = 'project-btn';
+                btn.href        = project.url;
+                btn.className   = 'project-btn';
                 btn.textContent = project.name;
                 contentDiv.appendChild(btn);
             });
@@ -459,123 +315,13 @@ const setupControls = () => {
     }
 };
 
-// ─── Cursor Orb ──────────────────────────────────────────────────────────────
-
-const initOrb = () => {
-    let orb = document.querySelector('.cursor-orb');
-    if (!orb) {
-        orb = document.createElement('div');
-        orb.className = 'cursor-orb';
-        document.body.appendChild(orb);
-    }
-
-    let hasMoved   = false;
-    let lastMouseX = 0;
-    let lastMouseY = 0;
-    let trailTimeout;
-
-    const applyTorchIntensity = (baseLevel) => {
-        const intensity = _torchMax * baseLevel;
-        document.documentElement.style.setProperty('--torch-intensity', intensity.toFixed(3));
-    };
-
-    const updateMouseProps = (e) => {
-        if (!hasMoved) {
-            hasMoved = true;
-            orb.classList.add('visible');
-            applyTorchIntensity(0.2);
-        }
-
-        const x = e.clientX;
-        const y = e.clientY;
-
-        const deltaX   = Math.abs(x - lastMouseX);
-        const deltaY   = Math.abs(y - lastMouseY);
-        const velocity = deltaX + deltaY;
-
-        if (velocity > 15) {
-            orb.classList.add('trailing');
-            clearTimeout(trailTimeout);
-            trailTimeout = setTimeout(() => orb.classList.remove('trailing'), 100);
-        }
-
-        orb.style.left = `${x}px`;
-        orb.style.top  = `${y}px`;
-
-        const angle = Math.atan2(y - lastMouseY, x - lastMouseX) * 180 / Math.PI;
-        orb.style.transform = velocity > 15
-            ? `translate(-50%, -50%) rotate(${angle}deg) scaleX(1.3)`
-            : `translate(-50%, -50%)`;
-
-        document.documentElement.style.setProperty('--mouse-x', `${x}px`);
-        document.documentElement.style.setProperty('--mouse-y', `${y}px`);
-
-        lastMouseX = x;
-        lastMouseY = y;
-    };
-
-    window.addEventListener('mousemove', (e) => {
-        requestAnimationFrame(() => updateMouseProps(e));
-    });
-
-    document.addEventListener('mouseleave', () => {
-        orb.classList.remove('visible');
-        document.documentElement.style.setProperty('--torch-intensity', '0');
-        hasMoved = false;
-    });
-
-    window.addEventListener('mousedown', () => {
-        orb.classList.add('clicking');
-        applyTorchIntensity(0.35);
-    });
-
-    window.addEventListener('mouseup', () => {
-        orb.classList.remove('clicking');
-        applyTorchIntensity(0.2);
-    });
-
-    document.addEventListener('mouseover', (e) => {
-        const target = e.target;
-        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
-            orb.classList.add('text-mode');
-        } else if (target.closest('a, button, .labo h2, #clear-search-btn, #close-all-btn')) {
-            orb.classList.add('expanding');
-        }
-    });
-
-    document.addEventListener('mouseout', (e) => {
-        const related = e.relatedTarget;
-        if (!related || !related.closest('a, button, .labo h2, input, textarea')) {
-            orb.classList.remove('text-mode', 'expanding');
-        }
-    });
-};
-
-// ─── Clock ───────────────────────────────────────────────────────────────────
-
-const updateClock = () => {
-    const clockElement = document.getElementById('digital-clock');
-    if (!clockElement) return;
-
-    const now     = new Date();
-    const dayName = new Intl.DateTimeFormat('en-GB', { weekday: 'long' }).format(now);
-    const hours   = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-
-    clockElement.textContent = `${dayName} ${hours}:${minutes}:${seconds}`;
-};
-
 // ─── Init ────────────────────────────────────────────────────────────────────
-
-setInterval(updateClock, 1000);
-setInterval(updateSky, 60000);
 
 window.addEventListener('load', () => {
     renderLabs();
     setupControls();
-    initOrb();
-    updateClock();
-    updateSky();
-    initGeolocation();
+    initOrb();       // orb.js
+    updateClock();   // clock.js
+    updateSky();     // sky.js
+    initGeolocation(); // sky.js
 });
