@@ -21,8 +21,6 @@ const setWeatherCondition = (condition, cloudCover) => {
 
 const CLOUD_PNG_SRCS = [
     'assets/clouds/cloud1.png',
-    'assets/clouds/cloud2.png',
-    'assets/clouds/cloud3.png',
 ];
 
 const MAX_CLOUDS  = 12;
