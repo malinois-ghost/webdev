@@ -154,6 +154,15 @@ const labs = [
             { name: "Formvalidatie", url: "labo_17/formvalidatie.html" },
         ]
     },
+    {
+        course: "Web Development 1",
+        title: "Labo 18",
+        projects: [
+            { name: "DOM tree nodes", url: "labo_18/dom_tree_nodes.html" },
+            { name: "Oefeningen nodes", url: "labo_18/oefeningen_nodes.html" },
+            { name: "ColorPicker uitbreiding", url: "labo_18/colorpicker_uitbreiding.html" },
+        ]
+    },
 ];
 
 let courseQuery  = "";

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <title>Colorpicker uitbreiding</title>
+    <link rel="stylesheet" href="styles/colorpicker_uitbreiding.css">
+</head>
+<body>
+<div id="picker">
+    <div>
+        <p>Een gekleurd blokje:</p>
+        <div class="colorCube"></div>
+    </div>
+    <div id="controls">
+        <label for="red"></label><input type="range" class="sliderRed" value="0" min="0" max="255" id="red">
+        <label for="green"></label><input type="range" class="sliderGreen" value="0" min="0" max="255" id="green">
+        <label for="blue"></label><input type="range" class="sliderBlue" value="0" min="0" max="255" id="blue">
+        <button id="btnSave">Save</button>
+    </div>
+</div>
+
+<div id="savedColors"></div>
+
+<footer>
+    <a href="../index.html">Home page</a>
+</footer>
+
+<script src="scripts/colorpicker_uitbreiding.js"></script>
+</body>
+</html>
