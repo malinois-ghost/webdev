@@ -3,22 +3,74 @@
 const IGNORE_LIST = ['min.js', 'min.css', 'analytics', 'font-awesome', 'favicon', 'node_modules'];
 
 const EXT_MAP = {
+    // ─── Web Frontend ─────────────────────────────────────
     '.html':    { name: 'HTML',        color: '#e34c26' },
     '.css':     { name: 'CSS',         color: '#563d7c' },
+    '.scss':    { name: 'Sass',        color: '#c6538c' },
     '.js':      { name: 'JavaScript',  color: '#f1e05a' },
+    '.jsx':     { name: 'React JS',    color: '#61dafb' },
     '.ts':      { name: 'TypeScript',  color: '#3178c6' },
-    '.json':    { name: 'JSON',        color: '#292929' },
-    '.md':      { name: 'Markdown',    color: '#083fa1' },
+    '.tsx':     { name: 'React TS',    color: '#3178c6' },
+    '.vue':     { name: 'Vue',         color: '#41b883' },
+
+    // ─── The C Family & Java ──────────────────────────────
+    '.c':       { name: 'C',           color: '#555555' },
+    '.cpp':     { name: 'C++',         color: '#f34b7d' },
+    '.cc':      { name: 'C++',         color: '#f34b7d' },
+    '.h':       { name: 'C Header',    color: '#91de79' },
+    '.hpp':     { name: 'C++ Header',  color: '#a91e33' },
+    '.cs':      { name: 'C#',          color: '#178600' },
+    '.java':    { name: 'Java',        color: '#b07219' },
+    '.kt':      { name: 'Kotlin',      color: '#a97bff' },
+
+    // ─── Backend & Systems ────────────────────────────────
     '.php':     { name: 'PHP',         color: '#4f5d95' },
-    '.py':      { name: 'Python',      color: '#3572A5' },
+    '.py':      { name: 'Python',      color: '#3572a5' },
+    '.go':      { name: 'Go',          color: '#00add8' },
+    '.rs':      { name: 'Rust',        color: '#dea584' },
+    '.rb':      { name: 'Ruby',        color: '#701516' },
+    '.swift':   { name: 'Swift',       color: '#f05138' },
+
+    // ─── Data, Config & Docs ──────────────────────────────
     '.sql':     { name: 'SQL',         color: '#e38c00' },
-    '.svg':     { name: 'SVG',         color: '#ff9900' }
+    '.json':    { name: 'JSON',        color: '#292929' },
+    '.xml':     { name: 'XML',         color: '#0060ac' },
+    '.yaml':    { name: 'YAML',        color: '#cb171e' },
+    '.yml':     { name: 'YAML',        color: '#cb171e' },
+    '.md':      { name: 'Markdown',    color: '#083fa1' },
+    '.csv':     { name: 'CSV',         color: '#27733b' },
+
+    // ─── Scripts & Devops ─────────────────────────────────
+    '.sh':      { name: 'Shell',       color: '#89e051' },
+    '.bash':    { name: 'Bash',        color: '#89e051' },
+    '.ps1':     { name: 'PowerShell',  color: '#012456' },
+    '.dockerfile': { name: 'Docker',   color: '#384d54' }
 };
 
 const MEDIA_EXTS = [
-    '.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif', '.ico', // Afbeeldingen
-    '.mp4', '.webm', '.ogg',                                   // Video
-    '.mp3', '.wav', '.flac'                                    // Audio
+    // ─── Standard Web Images ──────────────────────────────
+    '.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif', '.ico', '.svg', '.bmp', '.tif', '.tiff',
+
+    // ─── High-End & Mobile Photography ────────────────────
+    '.heic', '.heif', '.raw', '.arw', '.cr2', '.nef', '.dng',
+
+    // ─── Design & Vector Assets ───────────────────────────
+    '.psd', '.ai', '.eps', '.pdf', '.sketch', '.fig',
+
+    // ─── Video & Animation ────────────────────────────────
+    '.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.flv', '.wmv', '.m4v',
+
+    // ─── Audio & Music ────────────────────────────────────
+    '.mp3', '.wav', '.flac', '.m4a', '.aac', '.ogg', '.wma', '.aiff', '.mid',
+
+    // ─── Web Fonts & Typography ───────────────────────────
+    '.woff', '.woff2', '.ttf', '.otf', '.eot',
+
+    // ─── 3D & Virtual Reality ─────────────────────────────
+    '.obj', '.glb', '.gltf', '.fbx', '.stl', '.usdz',
+
+    // ─── Document Assets (Non-Code) ───────────────────────
+    '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.rtf'
 ];
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
@@ -29,7 +81,7 @@ const _isMedia = (url) => MEDIA_EXTS.includes(_extOf(url));
 
 const _langOf = (url) => {
     const ext = _extOf(url);
-    if (!ext) return EXT_MAP['.html']; // Homepage fix
+    if (!ext) return EXT_MAP['.html'];
     return EXT_MAP[ext] ?? null;
 };
 
@@ -55,10 +107,11 @@ const _formatNumber = (n) =>
     n >= 1_000_000 ? `${(n / 1_000_000).toFixed(2)}M` :
         n >= 1_000 ? `${(n / 1_000).toFixed(1)}K` : `${n}`;
 
+// Scans HTML specifically for tags
 const _extractAssets = (html, baseUrl) => {
     const found = [];
     const patterns = [
-        /href=["']([^"'#?]+\.(?:css|html|php))/gi,
+        /href=["']([^"'#?]+\.(?:css|html|php|svg|bits))/gi,
         /src=["']([^"'#?]+\.(?:js|png|jpg|jpeg|gif|webp|svg|mp4|webm|mp3|wav))/gi,
         /srcset=["']([^"'#? ]+\.[a-z]{3,4})/gi
     ];
@@ -66,6 +119,21 @@ const _extractAssets = (html, baseUrl) => {
         for (const m of html.matchAll(regex)) found.push(m[1]);
     });
     const base = new URL(baseUrl, window.location.href);
+    return [...new Set(found)]
+        .map(p => { try { return new URL(p, base).href; } catch { return null; } })
+        .filter(url => url && !IGNORE_LIST.some(term => url.toLowerCase().includes(term)));
+};
+
+// NEW: Scans CSS/JS content for hidden URLs (background-images, imports, etc)
+const _scanDeepContent = (text, baseUrl) => {
+    const found = [];
+    const cssUrlPattern = /url\(['"]?([^'利益")#?]+\.(?:png|jpg|jpeg|gif|webp|svg|avif|mp4|mp3|woff2?|ttf))['"]?\)/gi;
+    const jsStringPattern = /['"]([^'利益"#? ]+\.(?:png|jpg|jpeg|gif|webp|svg|avif|mp4|ts|js|css))['"]/gi;
+
+    for (const m of text.matchAll(cssUrlPattern)) found.push(m[1]);
+    for (const m of text.matchAll(jsStringPattern)) found.push(m[1]);
+
+    const base = new URL(baseUrl);
     return [...new Set(found)]
         .map(p => { try { return new URL(p, base).href; } catch { return null; } })
         .filter(url => url && !IGNORE_LIST.some(term => url.toLowerCase().includes(term)));
@@ -87,9 +155,7 @@ const _splitHtml = (html) => {
 // ─── Centrale scan ─────────────────────────────────────────────────────────────
 
 const _scanProjects = async () => {
-    // FIX 1: Check of 'labs' bestaat. Zo niet, wacht even of gebruik een lege array.
     const labsData = (typeof labs !== 'undefined') ? labs : [];
-
     const startUrls = [
         window.location.href,
         ...labsData.flatMap(lab => lab.projects ? lab.projects.map(p => p.url) : [])
@@ -102,18 +168,11 @@ const _scanProjects = async () => {
 
     const processUrl = async (rawUrl) => {
         let urlObj;
-        try {
-            urlObj = new URL(rawUrl, window.location.href);
-        } catch { return; }
-
+        try { urlObj = new URL(rawUrl, window.location.href); } catch { return; }
         const url = urlObj.href;
 
-        // FIX 2: CORS BEVEILIGING
-        // Scan alleen bestanden op hetzelfde domein (bijv. localhost of jouw-site.be)
-        if (urlObj.hostname !== window.location.hostname) {
-            return;
-        }
-
+        // CORS & Duplicate check
+        if (urlObj.hostname !== window.location.hostname) return;
         if (seen.has(url) || IGNORE_LIST.some(term => url.toLowerCase().includes(term))) return;
         seen.add(url);
 
@@ -126,6 +185,7 @@ const _scanProjects = async () => {
         if (asset.text !== null) {
             const langDef = _langOf(url);
             if (langDef) {
+                // If HTML: parse sections and extract linked assets
                 if (langDef.name === 'HTML') {
                     const parts = _splitHtml(asset.text);
                     Object.entries(parts).forEach(([l, t]) => {
@@ -135,10 +195,17 @@ const _scanProjects = async () => {
                     });
                     const deeper = _extractAssets(asset.text, url);
                     await Promise.all(deeper.map(a => processUrl(a)));
-                } else {
+                }
+                // If CSS/JS: count stats AND scan deep for media/imports
+                else {
                     langChars[langDef.name] = (langChars[langDef.name] ?? 0) + asset.text.length;
                     stats.chars += asset.text.length;
                     stats.lines += asset.text.split('\n').filter(line => line.trim()).length;
+
+                    if (['CSS', 'JavaScript', 'TypeScript'].includes(langDef.name)) {
+                        const deepAssets = _scanDeepContent(asset.text, url);
+                        await Promise.all(deepAssets.map(a => processUrl(a)));
+                    }
                 }
             }
         }
@@ -156,7 +223,7 @@ const _injectLsStyles = () => {
     s.id = 'ls-style';
     s.textContent = `
         .ls-widget { position: fixed; top: 14px; z-index: 999; background: var(--ui-surface, rgba(18,28,36,0.9)); border: 1px solid var(--ui-surface-alt, rgba(255,255,255,0.08)); border-radius: 10px; backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.4); font-family: 'Courier New', Courier, monospace; opacity: 0; transform: translateY(-6px); transition: opacity 0.5s ease, transform 0.5s ease; pointer-events: none; }
-        .ls-widget.ls-ready { opacity: 1; transform: translateY(0); }
+        .ls-widget.ls-ready { opacity: 1; transform: translateY(0); pointer-events: auto; }
         #lang-stats-widget { left: 14px; padding: 9px 13px 11px; min-width: 178px; max-width: 220px; }
         .ls-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
         .ls-title { font-size: 0.62rem; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ui-text-muted, #7a9ab0); }
@@ -188,20 +255,30 @@ const _renderWidgets = (totals, stats) => {
     const lw = document.getElementById('lang-stats-widget');
     const sw = document.getElementById('code-stats-widget');
 
-    // Render Talen
     const grand = Object.values(totals).reduce((a, b) => a + b, 0);
-    const sorted = Object.entries(totals).map(([name, chars]) => ({ name, chars, pct: (chars / grand) * 100 })).sort((a, b) => b.chars - a.chars);
+    const sorted = Object.entries(totals)
+        .map(([name, chars]) => ({ name, chars, pct: (chars / grand) * 100 }))
+        .sort((a, b) => b.chars - a.chars);
+
     lw.querySelector('.ls-subtitle').textContent = _formatSize(grand);
     const bar = lw.querySelector('.ls-bar'); bar.innerHTML = '';
     const legend = lw.querySelector('.ls-legend'); legend.innerHTML = '';
 
     sorted.forEach(({ name, pct }) => {
-        const seg = document.createElement('div'); seg.className = 'ls-seg'; seg.style.width = `${pct}%`; seg.style.background = _colorOf(name); bar.appendChild(seg);
-        const item = document.createElement('div'); item.className = 'ls-item'; item.innerHTML = `<span class="ls-dot" style="background:${_colorOf(name)}"></span><span class="ls-name">${name}</span><span class="ls-pct">${pct.toFixed(1)}%</span>`; legend.appendChild(item);
+        const seg = document.createElement('div');
+        seg.className = 'ls-seg';
+        seg.style.width = `${pct}%`;
+        seg.style.background = _colorOf(name);
+        bar.appendChild(seg);
+
+        const item = document.createElement('div');
+        item.className = 'ls-item';
+        item.innerHTML = `<span class="ls-dot" style="background:${_colorOf(name)}"></span><span class="ls-name">${name}</span><span class="ls-pct">${pct.toFixed(1)}%</span>`;
+        legend.appendChild(item);
     });
 
-    // Render Stats
-    const rows = sw.querySelector('.cs-rows'); rows.innerHTML = `
+    const rows = sw.querySelector('.cs-rows');
+    rows.innerHTML = `
         <div class="cs-row"><span class="cs-label">Karakters</span><span class="cs-value">${_formatNumber(stats.chars)}</span></div>
         <div class="cs-row"><span class="cs-label">Lijnen</span><span class="cs-value">${_formatNumber(stats.lines)}</span></div>
         <hr class="cs-divider">
@@ -209,13 +286,13 @@ const _renderWidgets = (totals, stats) => {
         <div class="cs-row"><span class="cs-label">Grootte</span><span class="cs-value">${_formatSize(stats.bytes)}</span></div>
     `;
 
-    lw.classList.add('ls-ready'); sw.classList.add('ls-ready');
+    lw.classList.add('ls-ready');
+    sw.classList.add('ls-ready');
 };
 
 const initLangStats = async () => {
     _injectLsStyles();
 
-    // Maak widgets als ze niet bestaan
     if (!document.getElementById('lang-stats-widget')) {
         document.body.insertAdjacentHTML('beforeend', `
             <div id="lang-stats-widget" class="ls-widget"><div class="ls-header"><span class="ls-title">Talen</span><span class="ls-subtitle"></span></div><div class="ls-bar"></div><div class="ls-legend"><div class="ls-scanning">Scannen…</div></div></div>
@@ -227,5 +304,4 @@ const initLangStats = async () => {
     _renderWidgets(result.totals, result.stats);
 };
 
-// Start
 initLangStats().catch(console.error);
