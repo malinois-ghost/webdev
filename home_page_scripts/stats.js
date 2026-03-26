@@ -74,13 +74,16 @@ const _isMedia = (url, contentType = '') => {
 const _langOf = (url) => {
     const ext = _extOf(url);
     if (!ext) return EXT_MAP['.html'];
-    return EXT_MAP[ext] ?? null;
+    return EXT_MAP[ext] ?? { name: 'Other', color: '#888' };
 };
 
 const _fetchAsset = async (url) => {
     try {
         const res = await fetch(url, { cache: 'force-cache' });
-        if (!res.ok) return null;
+        if (!res.ok) {
+            console.warn('Fetch failed:', url, res.status);
+            return null;
+        }
 
         const contentType = res.headers.get('Content-Type') || '';
         const isBinary = _isMedia(url, contentType);
@@ -239,9 +242,15 @@ const _scanProjects = async () => {
     // --- PARALLEL WORKER POOL ---
     const CONCURRENCY_LIMIT = 8;
     const worker = async () => {
-        while (queueToProcess.length > 0) {
+        while (true) {
             const url = queueToProcess.shift();
-            if (url) await processUrl(url);
+            if (!url) {
+                // wacht even om te zien of er nieuwe items bijkomen
+                await new Promise(r => setTimeout(r, 50));
+                if (queueToProcess.length === 0) break;
+                continue;
+            }
+            await processUrl(url);
         }
     };
 
