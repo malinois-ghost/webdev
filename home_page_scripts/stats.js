@@ -1,28 +1,75 @@
 // ─── Configuratie & Database ─────────────────────────────────────────────────
 
-const IGNORE_LIST = ['min.js', 'min.css', 'analytics', 'font-awesome', 'favicon', 'node_modules', '.../'];
+const IGNORE_LIST = [
+    'min.js', 'min.css', 'analytics', 'font-awesome', 'favicon',
+    'node_modules', '.git', '.svn', 'ds_store', '.env'
+];
 
 const EXT_MAP = {
+    // Web & Styling
     '.html':    { name: 'HTML',        color: '#e34c26' },
     '.css':     { name: 'CSS',         color: '#563d7c' },
     '.scss':    { name: 'Sass',        color: '#c6538c' },
+    '.sass':    { name: 'Sass',        color: '#c6538c' },
+    '.less':    { name: 'Less',        color: '#1d365d' },
+
+    // Scripts & Logic
     '.js':      { name: 'JavaScript',  color: '#f1e05a' },
+    '.mjs':     { name: 'JavaScript',  color: '#f1e05a' },
+    '.jsx':     { name: 'React JS',    color: '#61dafb' },
     '.ts':      { name: 'TypeScript',  color: '#3178c6' },
+    '.tsx':     { name: 'React TS',    color: '#3178c6' },
+    '.vue':     { name: 'Vue',         color: '#41b883' },
+
+    // Backend & Systems
     '.php':     { name: 'PHP',         color: '#4f5d95' },
+    '.py':      { name: 'Python',      color: '#3572a5' },
+    '.java':    { name: 'Java',        color: '#b07219' },
+    '.c':       { name: 'C',           color: '#555555' },
+    '.cpp':     { name: 'C++',         color: '#f34b7d' },
+    '.cc':      { name: 'C++',         color: '#f34b7d' },
+    '.cs':      { name: 'C#',          color: '#178600' },
+    '.go':      { name: 'Go',          color: '#00add8' },
+    '.rs':      { name: 'Rust',        color: '#dea584' },
+    '.rb':      { name: 'Ruby',        color: '#701516' },
+    '.swift':   { name: 'Swift',       color: '#f05138' },
+    '.kt':      { name: 'Kotlin',      color: '#a97bff' },
+    '.dart':    { name: 'Dart',        color: '#00b4ab' },
+    '.sql':     { name: 'SQL',         color: '#e38c00' },
+
+    // Data & Config
     '.json':    { name: 'JSON',        color: '#292929' },
-    '.md':      { name: 'Markdown',    color: '#083fa1' }
+    '.xml':     { name: 'XML',         color: '#0060ac' },
+    '.yaml':    { name: 'YAML',        color: '#cb171e' },
+    '.yml':     { name: 'YAML',        color: '#cb171e' },
+    '.md':      { name: 'Markdown',    color: '#083fa1' },
+    '.csv':     { name: 'CSV',         color: '#237346' },
+    '.toml':    { name: 'TOML',        color: '#9c4221' }
 };
 
 const MEDIA_EXTS = [
-    '.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif', '.ico', '.svg',
-    '.mp4', '.webm', '.mp3', '.wav', '.woff', '.woff2', '.ttf'
+    // Images
+    '.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif', '.ico', '.svg', '.bmp', '.tiff',
+    // Video
+    '.mp4', '.webm', '.ogv', '.mov',
+    // Audio
+    '.mp3', '.wav', '.flac', '.aac', '.m4a',
+    // Fonts
+    '.woff', '.woff2', '.ttf', '.otf', '.eot',
+    // Binary/Archives
+    '.pdf', '.zip', '.rar', '.7z', '.tar', '.gz', '.exe', '.dll', '.so', '.iso'
 ];
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
 const _extOf = (url) => url.match(/(\.[a-zA-Z0-9]+)(?:\?|#|$)/)?.[1]?.toLowerCase() ?? null;
 
-const _isMedia = (url) => MEDIA_EXTS.includes(_extOf(url));
+const _isMedia = (url, contentType = '') => {
+    const ext = _extOf(url);
+    if (MEDIA_EXTS.includes(ext)) return true;
+    const ct = contentType.toLowerCase();
+    return ct.startsWith('image/') || ct.startsWith('video/') || ct.startsWith('audio/') || ct.includes('font') || ct.includes('octet-stream') || ct.includes('zip') || ct.includes('pdf');
+};
 
 const _langOf = (url) => {
     const ext = _extOf(url);
@@ -33,18 +80,17 @@ const _langOf = (url) => {
 const _fetchAsset = async (url) => {
     try {
         const res = await fetch(url, { cache: 'force-cache' });
-        // Als de server een 404 geeft, smeet de browser vroeger een error.
-        // Door direct te returnen bij !res.ok voorkomen we verdere afhandeling.
         if (!res.ok) return null;
 
+        const contentType = res.headers.get('Content-Type') || '';
+        const isBinary = _isMedia(url, contentType);
         const blob = await res.blob();
+
         return {
             size: blob.size,
-            text: _isMedia(url) ? null : await blob.text()
+            text: isBinary ? null : await blob.text()
         };
-    } catch {
-        return null;
-    }
+    } catch { return null; }
 };
 
 const _splitHtml = (html) => {
@@ -75,8 +121,8 @@ const _formatNumber = (n) => {
 const _extractAssets = (html, baseUrl) => {
     const found = [];
     const patterns = [
-        /href=["']([^"'#?]+\.(?:css|html|php|svg|bits))/gi,
-        /src=["']([^"'#?]+\.(?:js|png|jpg|jpeg|gif|webp|svg|mp4|webm|mp3|wav))/gi,
+        /href=["']([^"'#?]+\.(?:css|html|php|svg|bits|scss|ts|js|py|c|cpp|cs|java))/gi,
+        /src=["']([^"'#?]+\.(?:js|png|jpg|jpeg|gif|webp|svg|mp4|webm|mp3|wav|ts|jsx|tsx))/gi,
         /srcset=["']([^"'#? ]+\.[a-z]{3,4})/gi
     ];
 
@@ -88,11 +134,7 @@ const _extractAssets = (html, baseUrl) => {
         .map(p => {
             try {
                 let base = baseUrl;
-                // Als de basis-URL in een scripts map zit, gaan we één niveau omhoog
-                // voor alle assets die we in de HTML vinden.
-                if (base.includes('/scripts/')) {
-                    base = base.replace(/\/scripts\/[^/]*$/, '/');
-                }
+                if (base.includes('/scripts/')) base = base.replace(/\/scripts\/[^/]*$/, '/');
                 return new URL(p, base).href;
             } catch { return null; }
         })
@@ -107,7 +149,7 @@ const _extractAssets = (html, baseUrl) => {
 const _scanDeepContent = (text, baseUrl) => {
     const found = [];
     const cssUrlPattern = /url\(['"]?([^'利益")#?]+\.(?:png|jpg|jpeg|gif|webp|svg|avif|mp4|mp3|woff2?|ttf))['"]?\)/gi;
-    const jsStringPattern = /['"]([^'利益"#? ]+\.(?:png|jpg|jpeg|gif|webp|svg|avif|mp4|ts|js|css))['"]/gi;
+    const jsStringPattern = /['"]([^'利益"#? ]+\.(?:png|jpg|jpeg|gif|webp|svg|avif|mp4|ts|js|css|tsx|jsx|php|py|java|cpp|cs))['"]/gi;
 
     for (const m of text.matchAll(cssUrlPattern)) found.push(m[1]);
     for (const m of text.matchAll(jsStringPattern)) found.push(m[1]);
@@ -116,12 +158,7 @@ const _scanDeepContent = (text, baseUrl) => {
         .map(p => {
             try {
                 let base = baseUrl;
-                // De cruciale fix voor JS bestanden:
-                // Als het JS bestand in /scripts/ staat, forceer de zoektocht naar assets
-                // dan vanuit de map BOVEN scripts.
-                if (base.includes('/scripts/')) {
-                    base = base.replace(/\/scripts\/[^/]*$/, '/');
-                }
+                if (base.includes('/scripts/')) base = base.replace(/\/scripts\/[^/]*$/, '/');
                 return new URL(p, base).href;
             } catch { return null; }
         })
@@ -137,10 +174,13 @@ const _scanProjects = async () => {
         ...labsData.flatMap(lab => lab.projects ? lab.projects.map(p => p.url) : [])
     ];
 
-    const queue = [...new Set(startUrls)];
+    const initialQueue = [...new Set(startUrls)];
     const langChars = {};
     const stats = { chars: 0, lines: 0, files: 0, bytes: 0 };
     const seen = new Set();
+
+    // Gebruik een dynamische lijst die we parallel kunnen afwerken
+    const queueToProcess = [...initialQueue];
 
     const processUrl = async (rawUrl) => {
         if (!rawUrl) return;
@@ -154,31 +194,16 @@ const _scanProjects = async () => {
 
         let url = urlObj.href;
 
-        // --- DE ASSET FOLDER FIX ---
+        // --- ASSET FOLDER FIXES ---
+        if (url.includes('home_page_scripts/assets/')) url = url.replace('home_page_scripts/assets/', 'assets/');
+        if (url.includes('home_page_scripts/images/')) url = url.replace('home_page_scripts/images/', 'images/');
+        if (url.includes('home_page_scripts/home_page_scripts/')) url = url.replace(/home_page_scripts\/home_page_scripts\//g, 'home_page_scripts/');
 
-        // 1. Als 'home_page_scripts/assets/' voorkomt, verwijder de projectnaam
-        //    omdat de assets blijkbaar in de root 'webdev/assets' staan.
-        if (url.includes('home_page_scripts/assets/')) {
-            url = url.replace('home_page_scripts/assets/', 'assets/');
-        }
-
-        // 2. Dezelfde fix voor de images folder (indien van toepassing)
-        if (url.includes('home_page_scripts/images/')) {
-            url = url.replace('home_page_scripts/images/', 'images/');
-        }
-
-        // 3. De eerdere fix voor de dubbele projectnaam bij JS files (just in case)
-        if (url.includes('home_page_scripts/home_page_scripts/')) {
-            url = url.replace(/home_page_scripts\/home_page_scripts\//g, 'home_page_scripts/');
-        }
-
-        // --- VALIDATIE & SEEN CHECK ---
         const finalUrlObj = new URL(url);
         if (finalUrlObj.hostname !== window.location.hostname) return;
         if (seen.has(url) || IGNORE_LIST.some(term => url.toLowerCase().includes(term))) return;
         seen.add(url);
 
-        // --- FETCH ---
         const asset = await _fetchAsset(url);
         if (!asset) return;
 
@@ -195,27 +220,33 @@ const _scanProjects = async () => {
                         stats.chars += t.length;
                         stats.lines += t.split('\n').filter(line => line.trim()).length;
                     });
-
                     const deeper = _extractAssets(asset.text, url);
-                    for (const a of deeper) await processUrl(a);
+                    for (const a of deeper) if (!seen.has(a)) queueToProcess.push(a);
                 } else {
                     langChars[langDef.name] = (langChars[langDef.name] ?? 0) + asset.text.length;
                     stats.chars += asset.text.length;
                     stats.lines += asset.text.split('\n').filter(line => line.trim()).length;
 
-                    if (['CSS', 'JavaScript'].includes(langDef.name)) {
+                    if (['CSS', 'JavaScript', 'TypeScript', 'PHP', 'Python', 'Sass'].includes(langDef.name)) {
                         const deepAssets = _scanDeepContent(asset.text, url);
-                        for (const a of deepAssets) await processUrl(a);
+                        for (const a of deepAssets) if (!seen.has(a)) queueToProcess.push(a);
                     }
                 }
             }
         }
     };
 
-    // Verwerk één voor één om 503 errors op GitHub te voorkomen
-    for (const url of queue) {
-        await processUrl(url);
-    }
+    // --- PARALLEL WORKER POOL ---
+    const CONCURRENCY_LIMIT = 8;
+    const worker = async () => {
+        while (queueToProcess.length > 0) {
+            const url = queueToProcess.shift();
+            if (url) await processUrl(url);
+        }
+    };
+
+    // Start 8 workers tegelijk
+    await Promise.all(Array(CONCURRENCY_LIMIT).fill(null).map(() => worker()));
 
     return { totals: langChars, stats };
 };
