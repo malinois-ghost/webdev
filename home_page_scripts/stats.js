@@ -31,10 +31,17 @@ const _langOf = (url) => {
 };
 
 const _fetchAsset = async (url) => {
+    // 1. Gatekeeper: check if the URL should be ignored BEFORE fetching
+    const isIgnored = IGNORE_LIST.some(term => url.toLowerCase().includes(term.toLowerCase()));
+    if (isIgnored) {
+        // console.log(`Skipping ignored asset: ${url}`); // Optional for debugging
+        return null;
+    }
+
     try {
         const res = await fetch(url, { cache: 'force-cache' });
-        // Als de server een 404 geeft, smeet de browser vroeger een error.
-        // Door direct te returnen bij !res.ok voorkomen we verdere afhandeling.
+
+        // 2. Handle 404s or other server errors gracefully
         if (!res.ok) return null;
 
         const blob = await res.blob();
@@ -42,7 +49,8 @@ const _fetchAsset = async (url) => {
             size: blob.size,
             text: _isMedia(url) ? null : await blob.text()
         };
-    } catch {
+    } catch (err) {
+        // Network errors (like DNS issues or CORS) are caught here
         return null;
     }
 };
