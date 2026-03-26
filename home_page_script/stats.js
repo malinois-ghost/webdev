@@ -99,13 +99,15 @@ const _fetchAsset = async (url) => {
 
 const _formatSize = (bytes) => {
     if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 };
 
-const _formatNumber = (n) =>
-    n >= 1_000_000 ? `${(n / 1_000_000).toFixed(2)}M` :
-        n >= 1_000 ? `${(n / 1_000).toFixed(1)}K` : `${n}`;
+const _formatNumber = (n) => {
+    if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(3)}M`;
+    if (n >= 1_000) return `${(n / 1_000).toFixed(3)}K`;
+    return `${n}`;
+};
 
 // Scans HTML specifically for tags
 const _extractAssets = (html, baseUrl) => {
@@ -168,7 +170,11 @@ const _scanProjects = async () => {
 
     const processUrl = async (rawUrl) => {
         let urlObj;
-        try { urlObj = new URL(rawUrl, window.location.href); } catch { return; }
+        try {
+            urlObj = new URL(rawUrl, window.location.href);
+            urlObj.search = '';
+            urlObj.hash = '';
+        } catch { return; }
         const url = urlObj.href;
 
         // CORS & Duplicate check
@@ -273,7 +279,8 @@ const _renderWidgets = (totals, stats) => {
 
         const item = document.createElement('div');
         item.className = 'ls-item';
-        item.innerHTML = `<span class="ls-dot" style="background:${_colorOf(name)}"></span><span class="ls-name">${name}</span><span class="ls-pct">${pct.toFixed(1)}%</span>`;
+        // Hier aangepast naar pct.toFixed(2)
+        item.innerHTML = `<span class="ls-dot" style="background:${_colorOf(name)}"></span><span class="ls-name">${name}</span><span class="ls-pct">${pct.toFixed(2)}%</span>`;
         legend.appendChild(item);
     });
 
