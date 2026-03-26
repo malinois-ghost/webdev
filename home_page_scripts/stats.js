@@ -240,7 +240,7 @@ const _scanProjects = async () => {
     };
 
     // --- PARALLEL WORKER POOL ---
-    const CONCURRENCY_LIMIT = 2;
+    const CONCURRENCY_LIMIT = 1;
     const worker = async () => {
         while (true) {
             const url = queueToProcess.shift();
