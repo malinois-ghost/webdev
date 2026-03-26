@@ -73,9 +73,9 @@ const MOON_PHASE_COUNT = 8;   // ← change to 30 if you have 30 images
 
 const MOON_PHASE_SRC = (index) => {
     if (MOON_PHASE_COUNT === 30) {
-        return `assets/moon/moon_${String(index).padStart(2, '0')}.png`;
+        return `./assets/moon/moon_${String(index).padStart(2, '0')}.png`;
     }
-    return `assets/moon/moon_${index}.png`;
+    return `./assets/moon/moon_${index}.png`;
 };
 
 // Preload all phase images so there is no flicker on first show
@@ -141,7 +141,7 @@ const _makeImgEl = (src, size, id) => {
     return img;
 };
 
-const SUN_PNG_SRC = 'assets/sun/sun.png';
+const SUN_PNG_SRC = './assets/sun/sun.png';
 
 const initCelestialElements = () => {
     _preloadMoonPhases();
