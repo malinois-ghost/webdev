@@ -354,7 +354,7 @@ window.addEventListener('load', () => {
     initCanvas();
     renderLabs();
     setupControls();
-    initLangStats();
+    initStats().catch(console.error);
     initOrb();
     updateClock();
     updateSky();

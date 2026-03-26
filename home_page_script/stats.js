@@ -297,7 +297,7 @@ const _renderWidgets = (totals, stats) => {
     sw.classList.add('ls-ready');
 };
 
-const initLangStats = async () => {
+const initStats = async () => {
     _injectLsStyles();
 
     if (!document.getElementById('lang-stats-widget')) {
@@ -311,4 +311,4 @@ const initLangStats = async () => {
     _renderWidgets(result.totals, result.stats);
 };
 
-initLangStats().catch(console.error);
+initStats().catch(console.error);
