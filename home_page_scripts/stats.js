@@ -2,12 +2,12 @@
 
 const IGNORE_LIST = ['min.js', 'min.css', 'analytics', 'font-awesome', 'favicon', 'node_modules', '.../'];
 
-const EXT_MAP = {
-    // Web & Styling
+const EXT_MAP = {// Web & Styling
     '.html': { name: 'HTML', color: '#e34c26' },
     '.css': { name: 'CSS', color: '#563d7c' },
     '.scss': { name: 'Sass', color: '#c6538c' },
-    '.sass': { name: 'Sass', color: '#c6538c' },
+    '.sass':
+     { name: 'Sass', color: '#c6538c' },
     '.less': { name: 'Less', color: '#1d365d' },
 
     // Scripts & Logic
@@ -50,7 +50,7 @@ const MEDIA_EXTS = [
     // Video
     '.mp4', '.webm', '.ogv', '.mov',
     // Audio
-    '.mp3', '.wav', '.flac', '.aac', '.m4a',
+    '.mp3', '.wav', '.flac', '.aac', '.m4a', '.ogg',
     // Fonts
     '.woff', '.woff2', '.ttf', '.otf', '.eot',
     // Binary/Archives
