@@ -3,19 +3,58 @@
 const IGNORE_LIST = ['min.js', 'min.css', 'analytics', 'font-awesome', 'favicon', 'node_modules', '.../'];
 
 const EXT_MAP = {
-    '.html':    { name: 'HTML',        color: '#e34c26' },
-    '.css':     { name: 'CSS',         color: '#563d7c' },
-    '.scss':    { name: 'Sass',        color: '#c6538c' },
-    '.js':      { name: 'JavaScript',  color: '#f1e05a' },
-    '.ts':      { name: 'TypeScript',  color: '#3178c6' },
-    '.php':     { name: 'PHP',         color: '#4f5d95' },
-    '.json':    { name: 'JSON',        color: '#292929' },
-    '.md':      { name: 'Markdown',    color: '#083fa1' }
+    // Web & Styling
+    '.html': { name: 'HTML', color: '#e34c26' },
+    '.css': { name: 'CSS', color: '#563d7c' },
+    '.scss': { name: 'Sass', color: '#c6538c' },
+    '.sass': { name: 'Sass', color: '#c6538c' },
+    '.less': { name: 'Less', color: '#1d365d' },
+
+    // Scripts & Logic
+    '.js': { name: 'JavaScript', color: '#f1e05a' },
+    '.mjs': { name: 'JavaScript', color: '#f1e05a' },
+    '.jsx': { name: 'React JS', color: '#61dafb' },
+    '.ts': { name: 'TypeScript', color: '#3178c6' },
+    '.tsx': { name: 'React TS', color: '#3178c6' },
+    '.vue': { name: 'Vue', color: '#41b883' },
+
+    // Backend & Systems
+    '.php': { name: 'PHP', color: '#4f5d95' },
+    '.py': { name: 'Python', color: '#3572a5' },
+    '.java': { name: 'Java', color: '#b07219' },
+    '.c': { name: 'C', color: '#555555' },
+    '.cpp': { name: 'C++', color: '#f34b7d' },
+    '.cc': { name: 'C++', color: '#f34b7d' },
+    '.cs': { name: 'C#', color: '#178600' },
+    '.go': { name: 'Go', color: '#00add8' },
+    '.rs': { name: 'Rust', color: '#dea584' },
+    '.rb': { name: 'Ruby', color: '#701516' },
+    '.swift': { name: 'Swift', color: '#f05138' },
+    '.kt': { name: 'Kotlin', color: '#a97bff' },
+    '.dart': { name: 'Dart', color: '#00b4ab' },
+    '.sql': { name: 'SQL', color: '#e38c00' },
+
+    // Data & Config
+    '.json': { name: 'JSON', color: '#292929' },
+    '.xml': { name: 'XML', color: '#0060ac' },
+    '.yaml': { name: 'YAML', color: '#cb171e' },
+    '.yml': { name: 'YAML', color: '#cb171e' },
+    '.md': { name: 'Markdown', color: '#083fa1' },
+    '.csv': { name: 'CSV', color: '#237346' },
+    '.toml': { name: 'TOML', color: '#9c4221' }
 };
 
 const MEDIA_EXTS = [
-    '.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif', '.ico', '.svg',
-    '.mp4', '.webm', '.mp3', '.wav', '.woff', '.woff2', '.ttf'
+    // Images
+    '.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif', '.ico', '.svg', '.bmp', '.tiff',
+    // Video
+    '.mp4', '.webm', '.ogv', '.mov',
+    // Audio
+    '.mp3', '.wav', '.flac', '.aac', '.m4a',
+    // Fonts
+    '.woff', '.woff2', '.ttf', '.otf', '.eot',
+    // Binary/Archives
+    '.pdf', '.zip', '.rar', '.7z', '.tar', '.gz', '.exe', '.dll', '.so', '.iso'
 ];
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
