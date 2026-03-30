@@ -168,6 +168,7 @@ const labs = [
         title: "Labo 19",
         projects: [
             { name: "Hit an Object", url: "labo_19/hit_an_object/hit_an_object.html" },
+            { name: "Matching Games", url: "labo_19/matching_game/matching_game.html" },
         ]
     },
 ];
