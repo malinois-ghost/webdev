@@ -6,9 +6,11 @@ let global = {
     IMAGE_PATH_PREFIX:      "images/",
     IMAGE_PATH_SUFFIX:      ".png",
     CARD_BACK_IMAGE:        "images/back_face.png",
-    AUDIO_PATH_PREFIX:      "sounds/legends/",
+    CARD_BACK_AUDIO_IMAGE:  "images/back_face_audio.png",
+    AUDIO_PATH_PREFIX:      "sounds/arcade/",
     AUDIO_PATH_SUFFIX:      ".mp3",
     WAIT_TIME:              1200,
+    FLIP_SOUND_DURATION:    550,
 
     attempts:               0,
     flippedCards:           [],
@@ -25,8 +27,41 @@ const ALL_LEGENDS = [
     "Conduit", "Gibraltar", "Lifeline", "Loba", "Mirage", "Newcastle"
 ];
 
+const ALL_SOUND_TYPES = [
+    "Bell", "Bloop", "Chime", "Clap", "Ding", "Ping",
+    "Laser", "Zap", "Phase", "Zing", "Sweep", "Charge",
+    "Crash", "Jingle", "Blip", "Down", "ZapAlt", "BlipAlt"
+];
+
 const cardSecrets = new Map();
-const sounds = {};
+const audioMapping = new Map();
+const gameSounds = {};
+const cardSounds = {};
+
+let activeSound = null;
+
+const playSound = (audioElement) => {
+    if (activeSound) {
+        activeSound.pause();
+        activeSound.currentTime = 0;
+    }
+    const sfx = audioElement.cloneNode();
+    activeSound = sfx;
+    sfx.play().catch(() => {});
+    sfx.addEventListener("ended", () => {
+        if (activeSound === sfx) activeSound = null;
+    }, { once: true });
+};
+
+const playGameSound = (name) => {
+    const sfx = gameSounds[name];
+    if (sfx) playSound(sfx);
+};
+
+const playCardSound = (soundName) => {
+    const cached = cardSounds[soundName];
+    if (cached) playSound(cached);
+};
 
 const setup = () => {
     const overlay = document.createElement("div");
@@ -52,25 +87,23 @@ const setup = () => {
         global.isAudioMode = e.target.checked;
     });
 
-    preloadSounds();
+    preloadGameSounds();
 };
 
-const preloadSounds = () => {
-    ["flip", "match", "error", "start", "win", "abort"].forEach((name) => {
+const preloadGameSounds = () => {
+    ["flip", "match", "wrong", "start", "win", "abort"].forEach((name) => {
         const audio = new Audio("sounds/" + name + ".mp3");
-        audio.volume = 1;
         audio.load();
-        sounds[name] = audio;
+        gameSounds[name] = audio;
     });
 };
 
-const preloadLegendSounds = (legends) => {
-    legends.forEach((legendName) => {
-        if (sounds[legendName]) return;
-        const audio = new Audio(global.AUDIO_PATH_PREFIX + legendName + global.AUDIO_PATH_SUFFIX);
-        audio.volume = 1;
+const preloadCardSounds = (soundNames) => {
+    soundNames.forEach((name) => {
+        if (cardSounds[name]) return;
+        const audio = new Audio(global.AUDIO_PATH_PREFIX + name + global.AUDIO_PATH_SUFFIX);
         audio.load();
-        sounds[legendName] = audio;
+        cardSounds[name] = audio;
     });
 };
 
@@ -83,7 +116,10 @@ const startGame = () => {
     global.isBusy        = false;
     global.isGameRunning = true;
 
+    activeSound = null;
+
     cardSecrets.clear();
+    audioMapping.clear();
 
     document.body.classList.remove("busy");
     document.getElementById("attemptsDisplay").textContent = "Attempts: 0";
@@ -97,7 +133,7 @@ const startGame = () => {
 
     calculateGrid();
     buildPlayField();
-    playSound("start");
+    playGameSound("start");
 };
 
 const calculateGrid = () => {
@@ -106,15 +142,12 @@ const calculateGrid = () => {
     const availableH = window.innerHeight - 160;
     const screenRatio = availableW / availableH;
 
-    let bestCols = 1;
-    let bestRows = totalCards;
-    let bestScore = Infinity;
+    let bestCols = 1, bestRows = totalCards, bestScore = Infinity;
 
     for (let c = 1; c <= totalCards; c++) {
         if (totalCards % c !== 0) continue;
         const r = totalCards / c;
         const currentRatioScore = Math.abs((c / r) - screenRatio);
-
         if (currentRatioScore < bestScore) {
             bestScore = currentRatioScore;
             bestCols = c;
@@ -124,9 +157,7 @@ const calculateGrid = () => {
 
     global.COLS = bestCols;
     global.ROWS = bestRows;
-
-    document.getElementById("playField").style.gridTemplateColumns =
-        `repeat(${global.COLS}, 1fr)`;
+    document.getElementById("playField").style.gridTemplateColumns = `repeat(${global.COLS}, 1fr)`;
 };
 
 const buildPlayField = () => {
@@ -134,13 +165,17 @@ const buildPlayField = () => {
     playField.innerHTML = "";
 
     const selectedLegends = pickRandom(ALL_LEGENDS, global.CARD_TYPES_COUNT);
+    const selectedSounds = pickRandom(ALL_SOUND_TYPES, global.CARD_TYPES_COUNT);
+
+    selectedLegends.forEach((legend, index) => {
+        audioMapping.set(legend, selectedSounds[index]);
+    });
 
     if (global.isAudioMode) {
-        preloadLegendSounds(selectedLegends);
+        preloadCardSounds(selectedSounds);
     }
 
     const deck = [];
-
     selectedLegends.forEach((legend) => {
         for (let i = 0; i < global.MATCH_COUNT; i++) {
             deck.push(legend);
@@ -166,7 +201,8 @@ const createCard = (legendName) => {
     const backFace = document.createElement("div");
     backFace.classList.add("card-back");
     const backImg = document.createElement("img");
-    backImg.src = global.CARD_BACK_IMAGE;
+
+    backImg.src = global.isAudioMode ? global.CARD_BACK_AUDIO_IMAGE : global.CARD_BACK_IMAGE;
     backImg.alt = "card back";
     backFace.appendChild(backImg);
 
@@ -193,19 +229,20 @@ const handleCardClick = (event) => {
     if (global.isBusy || !global.isGameRunning) return;
 
     const card = event.currentTarget;
-
-    if (card.classList.contains("flipped")) return;
-    if (card.closest(".card-wrapper").classList.contains("removed")) return;
+    if (card.classList.contains("flipped") || card.closest(".card-wrapper").classList.contains("removed")) return;
     if (global.flippedCards.length >= global.MATCH_COUNT) return;
+
+    delete card.dataset.clearToken;
 
     const legendName = cardSecrets.get(card.dataset.id);
 
     card.classList.add("flipped");
     global.flippedCards.push(card);
-    playSound("flip");
+    playGameSound("flip");
 
     if (global.isAudioMode) {
-        playLegendVoice(legendName);
+        const mappedSound = audioMapping.get(legendName);
+        playCardSound(mappedSound);
     } else {
         const img = card.querySelector(".card-front img");
         if (img && !img.getAttribute("src")) {
@@ -217,20 +254,29 @@ const handleCardClick = (event) => {
     if (global.flippedCards.length === global.MATCH_COUNT) {
         global.attempts++;
         document.getElementById("attemptsDisplay").textContent = `Attempts: ${global.attempts}`;
-        processMatchAttempt();
+        global.isBusy = true;
+        document.body.classList.add("busy");
+
+        if (global.isAudioMode && activeSound) {
+            const soundToWaitFor = activeSound;
+            const onEnd = () => {
+                soundToWaitFor.removeEventListener("ended", onEnd);
+                processMatchAttempt();
+            };
+            soundToWaitFor.addEventListener("ended", onEnd);
+        } else {
+            setTimeout(processMatchAttempt, global.FLIP_SOUND_DURATION);
+        }
     }
 };
 
 const processMatchAttempt = () => {
-    global.isBusy = true;
-    document.body.classList.add("busy");
-
     const cards = global.flippedCards;
     const firstLegend = cardSecrets.get(cards[0].dataset.id);
     const isMatch = cards.every((c) => cardSecrets.get(c.dataset.id) === firstLegend);
 
     cards.forEach((c) => c.classList.add(isMatch ? "match-success" : "match-fail"));
-    playSound(isMatch ? "match" : "error");
+    playGameSound(isMatch ? "match" : "wrong");
 
     setTimeout(() => {
         if (isMatch) {
@@ -243,9 +289,13 @@ const processMatchAttempt = () => {
                 c.classList.remove("flipped", "match-success", "match-fail");
                 const img = c.querySelector(".card-front img");
                 if (img) {
+                    const flipToken = Date.now() + Math.random();
+                    c.dataset.clearToken = String(flipToken);
                     setTimeout(() => {
-                        img.removeAttribute("src");
-                        img.removeAttribute("alt");
+                        if (c.dataset.clearToken === String(flipToken)) {
+                            img.removeAttribute("src");
+                            img.removeAttribute("alt");
+                        }
                     }, 400);
                 }
             });
@@ -254,7 +304,6 @@ const processMatchAttempt = () => {
         global.flippedCards = [];
         global.isBusy = false;
         document.body.classList.remove("busy");
-
         checkGameOver();
     }, global.WAIT_TIME);
 };
@@ -274,23 +323,14 @@ const syncOverlay = () => {
     overlay.style.height = rect.height + "px";
 };
 
-const gameOverOverlayVisible = () => {
-    document.getElementById("gameOverOverlay").classList.add("visible");
-}
-
 const showEndScreen = () => {
     global.isGameRunning = false;
     syncOverlay();
-    playSound("win");
-    document.getElementById("overlayMessage").textContent = "🏆 YOU WON! 🏆";
+    playGameSound("win");
+    document.getElementById("overlayMessage").textContent = "🏆 CHAMPION SQUAD 🏆";
     document.getElementById("finalStats").textContent = `Completed in ${global.attempts} attempts!`;
-    gameOverOverlayVisible();
-
-    const startBtn = document.getElementById("startBtn");
-    startBtn.disabled = false;
-    startBtn.textContent = "Play Again";
-    document.getElementById("matchCountSlider").disabled = false;
-    document.getElementById("audioModeToggle").disabled = false;
+    document.getElementById("gameOverOverlay").classList.add("visible");
+    resetControls();
 };
 
 const abortGame = () => {
@@ -298,36 +338,19 @@ const abortGame = () => {
     global.isBusy = false;
     document.body.classList.remove("busy");
     syncOverlay();
-    playSound("abort");
-    document.getElementById("overlayMessage").textContent = "❌ Game aborted";
-    document.getElementById("finalStats").textContent =
-        `Stopped after ${global.attempts} attempt${global.attempts !== 1 ? "s" : ""}.`;
-    gameOverOverlayVisible();
+    playGameSound("abort");
+    document.getElementById("overlayMessage").textContent = "❌ Game Aborted";
+    document.getElementById("finalStats").textContent = `Stopped after ${global.attempts} attempts.`;
+    document.getElementById("gameOverOverlay").classList.add("visible");
+    resetControls();
+};
 
+const resetControls = () => {
     const startBtn = document.getElementById("startBtn");
     startBtn.disabled = false;
     startBtn.textContent = "Play Again";
     document.getElementById("matchCountSlider").disabled = false;
     document.getElementById("audioModeToggle").disabled = false;
-};
-
-const playSound = (name) => {
-    const sfx = sounds[name];
-    if (!sfx) return;
-    sfx.currentTime = 0;
-    sfx.play().catch(() => {});
-};
-
-const playLegendVoice = (legendName) => {
-    const cached = sounds[legendName];
-    if (cached) {
-        cached.currentTime = 0;
-        cached.play().catch(() => {});
-    } else {
-        const audio = new Audio(global.AUDIO_PATH_PREFIX + legendName + global.AUDIO_PATH_SUFFIX);
-        audio.volume = 1;
-        audio.play().catch(() => {});
-    }
 };
 
 const shuffle = (array) => {
