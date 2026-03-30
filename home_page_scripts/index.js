@@ -163,6 +163,13 @@ const labs = [
             { name: "ColorPicker uitbreiding", url: "labo_18/colorpicker_uitbreiding.html" },
         ]
     },
+    {
+        course: "Web Development 1",
+        title: "Labo 19",
+        projects: [
+            { name: "Hit an Object", url: "labo_19/hit_an_object/hit_an_object.html" },
+        ]
+    },
 ];
 
 let courseQuery  = "";

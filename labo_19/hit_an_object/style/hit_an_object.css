@@ -1,0 +1,114 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #1a0a2e;
+    font-family: Arial, sans-serif;
+    user-select: none;
+}
+
+#header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: darkslateblue;
+    color: white;
+    height: 50px;
+}
+
+#scoreDisplay {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ff79c6;
+}
+
+#startBtn {
+    padding: 8px 24px;
+    font-size: 16px;
+    background-color: rebeccapurple;
+    color: white;
+    border: 2px solid #ff79c6;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#startBtn:hover {
+    background-color: #ff79c6;
+    color: rebeccapurple;
+}
+
+#playField {
+    position: relative;
+    width: 600px;
+    height: 800px;
+    margin: 20px auto;
+    background-color: darkslateblue;
+    border: 3px solid rebeccapurple;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+footer {
+    text-align: center;
+    padding: 12px;
+    color: #cbb8f0;
+    font-size: 14px;
+    background-color: darkslateblue;
+}
+
+footer a {
+    color: #ff79c6;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+#target {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+#target:hover {
+    transform: scale(1.15);
+}
+
+#gameOverOverlay {
+    display: none;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.75);
+    color: white;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: bold;
+    z-index: 10;
+    border-radius: 6px;
+}
+
+#gameOverOverlay.visible {
+    display: flex;
+}
+
+#gameOverOverlay p {
+    margin-bottom: 16px;
+    color: #ff79c6;
+}
+
+#gameOverOverlay #finalScore {
+    font-size: 20px;
+    color: white;
+    margin-bottom: 20px;
+}
