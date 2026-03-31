@@ -171,6 +171,15 @@ const labs = [
             { name: "Matching Games", url: "labo_19/matching_game/matching_game.html" },
         ]
     },
+    {
+        course: "Web Development 1",
+        title: "Labo 20",
+        projects: [
+            { name: "Dagen op de wereldbol", url: "labo_20/dagen_op_de_wereldbol.html" },
+            { name: "JSON", url: "labo_20/json.html" },
+            { name: "contactmanagaer", url: "labo_20/contactmanager.html" },
+        ]
+    },
 ];
 
 let courseQuery  = "";
