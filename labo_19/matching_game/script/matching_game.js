@@ -1,3 +1,6 @@
+// Global configuration and state object.
+// Contains constants (grid size, card types, image/audio paths, timing)
+// and runtime state (attempts, flipped cards, busy/running/audio mode flags).
 let global = {
     COLS:                   4,
     ROWS:                   3,
@@ -19,6 +22,7 @@ let global = {
     isAudioMode:            false
 };
 
+// Full pool of Apex Legends character names used as card identities.
 const ALL_LEGENDS = [
     "Ballistic", "Bangalore", "Fuse", "Mad_Maggie", "Revenant",
     "Alter", "Ash", "Horizon", "Octane", "Pathfinder", "Wraith",
@@ -27,19 +31,30 @@ const ALL_LEGENDS = [
     "Conduit", "Gibraltar", "Lifeline", "Loba", "Mirage", "Newcastle"
 ];
 
+// Full pool of sound effect names used in audio mode instead of images.
 const ALL_SOUND_TYPES = [
     "Bell", "Bloop", "Chime", "Clap", "Ding", "Ping",
     "Laser", "Zap", "Phase", "Zing", "Sweep", "Charge",
     "Crash", "Jingle", "Blip", "Down", "ZapAlt", "BlipAlt"
 ];
 
+// Maps each card's unique ID to its legend name (the card's secret identity).
 const cardSecrets = new Map();
+
+// Maps each legend name to its assigned sound effect for the current game.
 const audioMapping = new Map();
+
+// Caches preloaded Audio elements for game sounds (flip, match, win, etc.).
 const gameSounds = {};
+
+// Caches preloaded Audio elements for card-specific sounds in audio mode.
 const cardSounds = {};
 
+// Tracks the currently playing sound so it can be stopped before playing a new one.
 let activeSound = null;
 
+// Stops any currently playing sound, then plays the given audio element as a fresh clone.
+// Cleans up the activeSound reference when the sound finishes.
 const playSound = (audioElement) => {
     if (activeSound) {
         activeSound.pause();
@@ -53,16 +68,21 @@ const playSound = (audioElement) => {
     }, { once: true });
 };
 
+// Looks up a game sound by name and plays it if it exists.
 const playGameSound = (name) => {
     const sfx = gameSounds[name];
     if (sfx) playSound(sfx);
 };
 
+// Looks up a card sound by name and plays it if it exists.
 const playCardSound = (soundName) => {
     const cached = cardSounds[soundName];
     if (cached) playSound(cached);
 };
 
+// Initialization function that runs once the page loads.
+// Creates the game-over overlay, attaches event listeners for the start button,
+// Escape key, match count slider, and audio mode toggle, then preloads game sounds.
 const setup = () => {
     const overlay = document.createElement("div");
     overlay.id = "gameOverOverlay";
@@ -90,6 +110,8 @@ const setup = () => {
     preloadGameSounds();
 };
 
+// Preloads all general game sound effects (flip, match, wrong, start, win, abort)
+// into the gameSounds cache so they are ready to play without delay.
 const preloadGameSounds = () => {
     ["flip", "match", "wrong", "start", "win", "abort"].forEach((name) => {
         const audio = new Audio("sounds/" + name + ".mp3");
@@ -98,6 +120,8 @@ const preloadGameSounds = () => {
     });
 };
 
+// Preloads card-specific sound effects into the cardSounds cache.
+// Skips any sounds that have already been cached.
 const preloadCardSounds = (soundNames) => {
     soundNames.forEach((name) => {
         if (cardSounds[name]) return;
@@ -107,6 +131,9 @@ const preloadCardSounds = (soundNames) => {
     });
 };
 
+// Resets all game state and starts a new game.
+// Reads the current slider and toggle values, clears previous card data,
+// recalculates the grid layout, builds the play field, and plays the start sound.
 const startGame = () => {
     global.MATCH_COUNT = parseInt(document.getElementById("matchCountSlider").value);
     global.isAudioMode = document.getElementById("audioModeToggle").checked;
@@ -136,6 +163,9 @@ const startGame = () => {
     playGameSound("start");
 };
 
+// Calculates the optimal number of columns and rows for the current screen size.
+// Tries all valid column counts and picks the layout whose aspect ratio
+// most closely matches the available screen area.
 const calculateGrid = () => {
     const totalCards = global.CARD_TYPES_COUNT * global.MATCH_COUNT;
     const availableW = window.innerWidth - 80;
@@ -160,6 +190,9 @@ const calculateGrid = () => {
     document.getElementById("playField").style.gridTemplateColumns = `repeat(${global.COLS}, 1fr)`;
 };
 
+// Clears the play field and fills it with a shuffled deck of cards.
+// Randomly selects legends and sounds for this round, maps each legend to a sound,
+// preloads card sounds in audio mode, and appends a card element for each deck entry.
 const buildPlayField = () => {
     const playField = document.getElementById("playField");
     playField.innerHTML = "";
@@ -187,6 +220,9 @@ const buildPlayField = () => {
     });
 };
 
+// Creates and returns a single card wrapper element for the given legend.
+// Assigns a unique ID, stores the legend in cardSecrets, and builds the
+// front/back faces depending on whether audio mode is active.
 const createCard = (legendName) => {
     const wrapper = document.createElement("div");
     wrapper.classList.add("card-wrapper");
@@ -225,6 +261,10 @@ const createCard = (legendName) => {
     return wrapper;
 };
 
+// Handles a click on a card.
+// Ignores clicks when the game is busy, the card is already flipped, or too many cards are open.
+// Flips the card, plays the appropriate sound or loads the image, increments attempts
+// when the required number of cards are flipped, then triggers match evaluation.
 const handleCardClick = (event) => {
     if (global.isBusy || !global.isGameRunning) return;
 
@@ -270,6 +310,11 @@ const handleCardClick = (event) => {
     }
 };
 
+// Evaluates whether the currently flipped cards are a match.
+// On a match: removes the cards from the field after a short delay.
+// On a mismatch: flips the cards back and clears their images using a token
+// to avoid race conditions if cards are flipped again quickly.
+// Resets the busy state and checks if the game is over.
 const processMatchAttempt = () => {
     const cards = global.flippedCards;
     const firstLegend = cardSecrets.get(cards[0].dataset.id);
@@ -308,11 +353,15 @@ const processMatchAttempt = () => {
     }, global.WAIT_TIME);
 };
 
+// Checks if all cards have been removed from the field.
+// If none remain, triggers the win end screen.
 const checkGameOver = () => {
     const remaining = document.querySelectorAll(".card-wrapper:not(.removed)");
     if (remaining.length === 0) showEndScreen();
 };
 
+// Syncs the game-over overlay's position and size to exactly cover the play field.
+// Called before showing the overlay to ensure correct placement after layout changes.
 const syncOverlay = () => {
     const field = document.getElementById("playField");
     const overlay = document.getElementById("gameOverOverlay");
@@ -323,6 +372,9 @@ const syncOverlay = () => {
     overlay.style.height = rect.height + "px";
 };
 
+// Ends the game with a win state.
+// Syncs and shows the overlay with a victory message and the total attempt count,
+// plays the win sound, and re-enables the game controls.
 const showEndScreen = () => {
     global.isGameRunning = false;
     syncOverlay();
@@ -333,6 +385,9 @@ const showEndScreen = () => {
     resetControls();
 };
 
+// Ends the game with an aborted state (triggered by pressing Escape).
+// Syncs and shows the overlay with an abort message and the attempt count so far,
+// plays the abort sound, and re-enables the game controls.
 const abortGame = () => {
     global.isGameRunning = false;
     global.isBusy = false;
@@ -345,6 +400,8 @@ const abortGame = () => {
     resetControls();
 };
 
+// Re-enables the start button, match count slider, and audio mode toggle
+// after a game ends or is aborted.
 const resetControls = () => {
     const startBtn = document.getElementById("startBtn");
     startBtn.disabled = false;
@@ -353,6 +410,7 @@ const resetControls = () => {
     document.getElementById("audioModeToggle").disabled = false;
 };
 
+// Shuffles an array in place using the Fisher-Yates algorithm and returns it.
 const shuffle = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -361,6 +419,9 @@ const shuffle = (array) => {
     return array;
 };
 
+// Returns n randomly selected items from the given array without modifying the original.
 const pickRandom = (array, n) => shuffle([...array]).slice(0, n);
 
+// Waits for the page to fully load before running setup,
+// ensuring all HTML elements exist before the script tries to access them.
 window.addEventListener("load", setup);

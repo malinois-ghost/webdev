@@ -1,3 +1,6 @@
+// Global configuration and state object.
+// Contains constants (image settings, bomb index, move delay)
+// and runtime state (score, interval ID, whether the game is active).
 let global = {
     IMAGE_COUNT:            5,
     IMAGE_SIZE:             48,
@@ -11,8 +14,13 @@ let global = {
     isGameRunning:          false
 };
 
+// Empty object used to store references to DOM elements,
+// populated during setup so they don't need to be queried repeatedly.
 const dom = {};
 
+// Initialization function that runs once the page loads.
+// Grabs existing DOM elements, creates the target image and game-over overlay
+// dynamically, and attaches event listeners for the start button and Escape key.
 const setup = () => {
     dom.playField = document.getElementById("playField");
     dom.startBtn = document.getElementById("startBtn");
@@ -41,6 +49,9 @@ const setup = () => {
     });
 };
 
+// Picks a random image and moves the target to a random position inside the play field.
+// If allowBomb is false (used at game start), the bomb image is excluded from the selection.
+// The chosen index is stored in the element's dataset so click handlers can identify it.
 const setTarget = (allowBomb = true) => {
     let index;
     do {
@@ -58,6 +69,10 @@ const setTarget = (allowBomb = true) => {
     console.log(`Afbeelding versprongen! Huidige interval: ${global.MOVE_DELAY}ms`);
 };
 
+// Resets and starts a new game.
+// Hides the game-over overlay, resets the score, shows the target,
+// disables the start button, and begins the interval that moves the target
+// every MOVE_DELAY milliseconds. The first target is always a non-bomb.
 const startGame = () => {
     if (dom.overlay) {
         dom.overlay.classList.remove("visible");
@@ -77,6 +92,9 @@ const startGame = () => {
     }, global.MOVE_DELAY);
 };
 
+// Stops the game.
+// Clears the movement interval, hides the target, displays the final score
+// inside the game-over overlay, and re-enables the start button.
 const endGame = () => {
     global.isGameRunning = false;
 
@@ -95,6 +113,10 @@ const endGame = () => {
     dom.startBtn.textContent = "Opnieuw";
 };
 
+// Handles a click on the target image.
+// If the bomb was clicked, the game ends immediately.
+// Otherwise, the score is incremented, the target moves to a new position right away,
+// and the movement interval is restarted so the timer resets after each successful click.
 const handleTargetClick = (event) => {
     event.stopPropagation();
     if (!global.isGameRunning) return;
@@ -117,4 +139,6 @@ const handleTargetClick = (event) => {
     }
 };
 
+// Waits for the page to fully load before running setup,
+// ensuring all HTML elements exist before the script tries to access them.
 window.addEventListener("load", setup);
