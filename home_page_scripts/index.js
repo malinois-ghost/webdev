@@ -290,7 +290,12 @@ const renderLabs = () => {
                 contentDiv.appendChild(btn);
             });
 
-        title.addEventListener('click', () => {
+        // ─── AANPASSING HIER: Blokkeer click in Game Mode ───
+        title.addEventListener('click', (e) => {
+            if (window._gameModeActive) {
+                e.preventDefault();
+                return;
+            }
             labDiv.classList.toggle('active');
             toggleLabStorage(lab.title);
         });
@@ -348,18 +353,21 @@ const masterLoop = (timestamp) => {
         drawStars(ctx, cv.width, cv.height, elevation, t);
         drawGodRays(ctx, cv.width, cv.height, elevation, azimuth);
 
-        // DOM element updates: sun + moon PNGs (also stores _moonState for glow)
+        // DOM element updates: sun + moon PNGs
         updateCelestialElements(cv.width, cv.height, elevation, azimuth);
 
-        // Canvas-drawn: moon glow halo (drawn after PNG position is known)
+        // Canvas-drawn: moon glow halo
         drawMoonGlow(ctx);
 
-        // DOM element updates: cloud PNGs (also advances cloud positions)
-        updateClouds(elevation);
+        // ─── AANPASSING HIER: Pauzeer wereld-simulatie in Game Mode ───
+        if (!window._gameModeActive) {
+            // DOM element updates: cloud PNGs (alleen als game uit staat)
+            updateClouds(elevation);
 
-        // Canvas-drawn: rain, snow, lightning, birds, bats
-        updateAtmosphere(t);
-        renderAtmosphere(ctx, cv.width, cv.height, elevation);
+            // Canvas-drawn: rain, snow, lightning, birds, bats
+            updateAtmosphere(t);
+            renderAtmosphere(ctx, cv.width, cv.height, elevation);
+        }
     }
 
     requestAnimationFrame(masterLoop);
@@ -375,8 +383,8 @@ window.addEventListener('load', () => {
     updateClock();
     updateSky();
     initStars();
-    initAtmosphere();           // creates cloud DOM elements + rain/snow arrays
-    initCelestialElements();    // creates sun + moon DOM elements
+    initAtmosphere();
+    initCelestialElements();
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(

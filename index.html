@@ -6,6 +6,7 @@
     <title>Web Development Home</title>
     <link rel="icon" href="data:,">
     <link href="home_page_styles/index.css" rel="stylesheet">
+    <link href="home_page_styles/game.css" rel="stylesheet">
 </head>
 <body>
 
@@ -46,6 +47,22 @@
 
 <div class="cursor-orb"></div>
 
+<div id="game-mode-ui" class="game-mode-ui">
+    <span class="game-label">Arena Mode</span>
+    <label class="switch">
+        <input type="checkbox" id="game-switch">
+        <span class="slider round"></span>
+    </label>
+</div>
+
+<canvas id="game-canvas"></canvas>
+<div id="game-hud"></div>
+<div id="game-menu"></div>
+<div id="leaderboard-panel"></div>
+<div id="keybind-panel"></div>
+<div id="save-score-panel"></div>
+<div id="death-flash"></div>
+
 <script src="home_page_scripts/canvas.js"></script>
 <script src="home_page_scripts/sky.js"></script>
 <script src="home_page_scripts/celestial.js"></script>
@@ -54,6 +71,7 @@
 <script src="home_page_scripts/orb.js"></script>
 <script src="home_page_scripts/clock.js"></script>
 <script src="home_page_scripts/index.js"></script>
+<script src="home_page_scripts/game.js"></script>
 
 </body>
 </html>
