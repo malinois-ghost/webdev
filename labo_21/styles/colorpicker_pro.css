@@ -1,0 +1,53 @@
+.colorCube {
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+}
+
+#red   {
+    accent-color: red;
+}
+#green {
+    accent-color: green;
+}
+#blue  {
+    accent-color: blue;
+}
+
+#picker {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+#controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#savedColors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.savedSwatch {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.btnDelete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 2px 5px;
+}

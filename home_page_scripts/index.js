@@ -180,6 +180,13 @@ const labs = [
             { name: "contactmanagaer", url: "labo_20/contactmanager.html" },
         ]
     },
+    {
+        course: "Web Development 1",
+        title: "Labo 21",
+        projects: [
+            { name: "Colorpicker Pro", url: "labo_21/colorpicker_pro.html" },
+        ]
+    },
 ];
 
 let courseQuery  = "";
