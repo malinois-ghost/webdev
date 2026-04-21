@@ -33,21 +33,31 @@
     margin-top: 20px;
 }
 
-.savedSwatch {
+.swatchWrapper {
     position: relative;
     width: 100px;
     height: 100px;
+    display: inline-block;
+}
+
+.savedSwatch {
+    width: 100%;
+    height: 100%;
     border: 1px solid black;
     cursor: pointer;
+    box-sizing: border-box;
 }
 
 .btnDelete {
     position: absolute;
     top: 0;
     right: 0;
+    margin: 0;
+    padding: 2px 6px;
     background: rgba(0,0,0,0.6);
     color: white;
     border: none;
     cursor: pointer;
-    padding: 2px 5px;
+    line-height: 1;
+    font-size: 12px;
 }
