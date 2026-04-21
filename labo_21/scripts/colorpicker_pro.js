@@ -68,7 +68,13 @@ const updateAndSaveSliders = () => {
 };
 
 const saveSwatchesToLocalStorage = () => {
-    const swatches = Array.from(document.querySelectorAll(".savedSwatch")).map(s => s.style.backgroundColor);
+    const swatchesNodes = document.querySelectorAll(".savedSwatch");
+    const swatches = [];
+
+    for (const swatch of swatchesNodes) {
+        swatches.push(swatch.style.backgroundColor);
+    }
+
     localStorage.setItem("savedColors", JSON.stringify(swatches));
 };
 
