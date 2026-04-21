@@ -67,8 +67,46 @@ const addSwatchToDOM = (color) => {
 };
 
 const saveColor = () => {
-    addSwatchToDOM(getCurrentColor());
-    saveSwatchesToLocalStorage();
+    const currentColor = getCurrentColor();
+    const swatchesNodes = document.querySelectorAll(".savedSwatch");
+
+    const targetValues = getRgbValues(currentColor);
+    let isDuplicate = false;
+
+    for (let i = 0; i < swatchesNodes.length; i++) {
+        const savedValues = getRgbValues(swatchesNodes[i].style.backgroundColor);
+
+        if (
+            savedValues[0] === targetValues[0] &&
+            savedValues[1] === targetValues[1] &&
+            savedValues[2] === targetValues[2]
+        ) {
+            isDuplicate = true;
+            break;
+        }
+    }
+
+    if (!isDuplicate) {
+        addSwatchToDOM(currentColor);
+        saveSwatchesToLocalStorage();
+    }
+};
+
+const getRgbValues = (colorString) => {
+    let str = colorString.substring(colorString.indexOf("(") + 1, colorString.indexOf(")"));
+
+    let parts = [];
+    let start = 0;
+    let end = str.indexOf(",");
+
+    while (end !== -1) {
+        parts.push(str.substring(start, end));
+        start = end + 1;
+        end = str.indexOf(",", start);
+    }
+    parts.push(str.substring(start));
+
+    return [parseInt(parts[0], 10), parseInt(parts[1], 10), parseInt(parts[2], 10)];
 };
 
 const loadData = () => {
