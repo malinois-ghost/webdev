@@ -50,10 +50,10 @@ const addSwatchToDOM = (color) => {
 };
 
 const setSliders = (color) => {
-    const parts = color.replace("rgb(", "").replace(")", "").split(",");
-    getSliderR().value = parts[0].trim();
-    getSliderG().value = parts[1].trim();
-    getSliderB().value = parts[2].trim();
+    const sliderParts = color.replace("rgb(", "").replace(")", "").split(",");
+    getSliderR().value = sliderParts[0].trim();
+    getSliderG().value = sliderParts[1].trim();
+    getSliderB().value = sliderParts[2].trim();
     updateAndSaveSliders();
 };
 
