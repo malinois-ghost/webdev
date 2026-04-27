@@ -1,92 +1,551 @@
-#picker {
+/* ===========================
+   Colorpicker Ultimate – CSS
+   =========================== */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --wheel-size: 200px;
+    --bg: #1a1a1a;
+    --surface: #242424;
+    --surface2: #2e2e2e;
+    --border: rgba(255,255,255,0.1);
+    --border-hover: rgba(255,255,255,0.2);
+    --text: #e8e8e8;
+    --text-muted: #888;
+    --text-hint: #555;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --success: #4caf7d;
+    --danger: #e05757;
+    --values-width: 220px;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 16px;
+    min-height: 100vh;
+}
+
+/* ── Layout ── */
+#app {
     display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 860px;
+}
+
+/* Wheel and values side-by-side, as one unit */
+#wheel-values-group {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
     align-items: flex-start;
-    gap: 40px;
-    margin-bottom: 20px;
 }
 
-#previewArea {
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+}
+
+.panel-title {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: 12px;
+}
+
+/* ── Wheel panel ── */
+#wheel-panel {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-
-.colorCube {
-    width: 120px;
-    height: 120px;
-    border-radius: 6px;
-    border: 1px solid #333;
-}
-
-#controls {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background: #f7f7f7;
-    width: 280px;
-}
-
-.controlRow {
-    display: grid;
-    grid-template-columns: 30px 1fr 60px;
     align-items: center;
     gap: 10px;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
-.controlRow label {
-    font-weight: bold;
+#wheel-wrap {
+    position: relative;
+    width: var(--wheel-size);
+    height: var(--wheel-size);
+    cursor: crosshair;
+    flex-shrink: 0;
 }
 
-#buttonRow {
+#wheelCanvas {
+    border-radius: 50%;
+    display: block;
+    width: var(--wheel-size);
+    height: var(--wheel-size);
+}
+
+#wheelCursor {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    top: 50%;
+    left: 50%;
+    transition: box-shadow 0.1s;
+}
+
+#preview-strip {
+    width: 100%;
+    height: 38px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    transition: background 0.1s;
+}
+
+/* ── Alpha slider ── */
+#alpha-row {
     display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
 }
 
-#buttonRow button {
-    padding: 6px 12px;
-    font-size: 14px;
+#alpha-row label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    min-width: 12px;
+}
+
+#alpha-val {
+    font-size: 11px;
+    color: var(--text-muted);
+    min-width: 34px;
+    text-align: right;
+}
+
+/* ── Buttons ── */
+#btn-row {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+}
+
+#btn-row button {
+    flex: 1;
+    font-size: 11px;
+    padding: 6px 4px;
     cursor: pointer;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    transition: background 0.15s, border-color 0.15s;
 }
 
-#savedColors {
+#btn-row button:hover {
+    background: var(--surface2);
+    border-color: var(--border-hover);
+}
+
+#btn-row button:active {
+    transform: scale(0.97);
+}
+
+/* ── Saved swatches ── */
+#saved-swatches {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.swatchWrapper {
-    position: relative;
-    width: 100px;
-    height: 100px;
-}
-
-.savedSwatch {
+    gap: 6px;
     width: 100%;
-    height: 100%;
+    min-height: 10px;
+}
+
+.swatch-wrap {
+    position: relative;
+    width: 30px;
+    height: 30px;
+}
+
+.swatch {
+    width: 30px;
+    height: 30px;
     border-radius: 6px;
-    border: 1px solid #333;
+    border: 1px solid var(--border);
     cursor: pointer;
+    transition: transform 0.15s;
 }
 
-.btnDelete {
+.swatch:hover {
+    transform: scale(1.12);
+}
+
+.del-swatch {
     position: absolute;
-    top: 4px;
-    right: 4px;
-    padding: 2px 6px;
-    background: rgba(0,0,0,0.7);
-    color: white;
-    border: none;
+    top: -4px;
+    right: -4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    font-size: 9px;
     cursor: pointer;
-    border-radius: 3px;
-    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.15s;
 }
 
-#red   { accent-color: red; }
-#green { accent-color: green; }
-#blue  { accent-color: blue; }
-#alpha { accent-color: gray; }
+.swatch-wrap:hover .del-swatch {
+    opacity: 1;
+}
+
+/* ── Values panel ── */
+#values-panel {
+    width: var(--values-width);
+    flex-shrink: 0;
+    flex-grow: 0;
+    /* align-self not set — it will match the height of the wheel panel naturally */
+}
+
+#nlInput {
+    width: 100%;
+    font-size: 13px;
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface2);
+    color: var(--text);
+    margin-bottom: 4px;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+#nlInput:focus {
+    border-color: var(--border-hover);
+}
+
+#nlInput::placeholder {
+    color: var(--text-hint);
+}
+
+#nl-status {
+    font-size: 11px;
+    min-height: 16px;
+    margin-bottom: 6px;
+}
+
+#nl-status.ok  { color: var(--success); }
+#nl-status.err { color: var(--danger); }
+
+/* ── Format tabs ── */
+#format-tabs {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.ftab {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: .03em;
+}
+
+.ftab:hover {
+    border-color: var(--border-hover);
+    color: var(--text);
+}
+
+.ftab.active {
+    background: var(--text);
+    color: var(--bg);
+    border-color: transparent;
+}
+
+/* ── Formatted output ── */
+#formatted-output {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 7px 10px;
+    background: var(--surface2);
+    border-radius: var(--radius-md);
+    word-break: break-all;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    color: var(--text);
+    transition: border-color 0.15s;
+}
+
+#formatted-output:hover {
+    border-color: var(--border-hover);
+}
+
+#copy-flash {
+    font-size: 11px;
+    color: var(--success);
+    height: 16px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+/* ── Channel inputs ── */
+.inputs-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 6px;
+}
+
+.irow {
+    display: grid;
+    grid-template-columns: 28px 1fr 58px;
+    align-items: center;
+    gap: 8px;
+}
+
+.irow label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-align: right;
+}
+
+.irow input[type="number"] {
+    width: 58px;
+    font-size: 12px;
+    padding: 3px 5px;
+    text-align: right;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--surface2);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.irow input[type="number"]:focus {
+    border-color: var(--border-hover);
+}
+
+/* ── Range slider ── */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    outline: none;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text);
+    border: 2px solid var(--surface);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    cursor: grab;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text);
+    border: 2px solid var(--surface);
+    cursor: grab;
+}
+
+/* ── Mixer panel ── */
+#mixer-panel {
+    width: 100%;
+}
+
+#mixer-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.mixer-hint {
+    font-size: 11px;
+    color: var(--text-hint);
+}
+
+#mixer-colors {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.mix-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.mix-swatch {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s;
+}
+
+.mix-swatch:hover {
+    transform: scale(1.05);
+}
+
+.mix-swatch.active-mix {
+    box-shadow: 0 0 0 2px var(--text);
+}
+
+.mix-label {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.mix-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.mix-plus {
+    font-size: 20px;
+    color: var(--text-hint);
+    line-height: 1;
+}
+
+#mix-ratio-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#mix-ratio-row input[type="range"] {
+    width: 100px;
+}
+
+.mix-ratio-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    min-width: 28px;
+}
+
+#ratioLabelA {
+    text-align: right;
+}
+
+.mix-equals {
+    font-size: 22px;
+    color: var(--text-hint);
+}
+
+#mix-result {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+.checkerboard {
+    background-image:
+            linear-gradient(45deg, #444 25%, transparent 25%),
+            linear-gradient(-45deg, #444 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #444 75%),
+            linear-gradient(-45deg, transparent 75%, #444 75%);
+    background-size: 8px 8px;
+    background-position: 0 0, 0 4px, 4px -4px, -4px 0;
+}
+
+.mix-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.mix-actions button {
+    font-size: 11px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    white-space: nowrap;
+    transition: background 0.15s;
+}
+
+.mix-actions button:hover {
+    background: var(--surface2);
+}
+
+/* ── Footer ── */
+footer {
+    margin-top: 16px;
+    font-size: 13px;
+}
+
+footer a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--text);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    #wheel-values-group {
+        flex-direction: column;
+    }
+
+    #values-panel {
+        width: 100%;
+    }
+
+    #mixer-colors {
+        gap: 8px;
+    }
+
+    #mix-ratio-row input[type="range"] {
+        width: 70px;
+    }
+}
