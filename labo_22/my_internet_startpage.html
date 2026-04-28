@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/css-bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/my_internet_startpage.css">
+    <title>My Internet Startpage</title>
+</head>
+<body>
+
+<div class="container my-5">
+
+    <h1 class="mb-4">My Internet Startpage</h1>
+
+    <div class="row mb-5 searchContainer">
+        <div class="col-12">
+            <label for="searchInput" class="form-label fw-bold">Zoekopdracht</label>
+            <div class="input-group">
+                <div class="d-flex flex-column w-100">
+                    <input type="text" id="searchInput" class="form-control searchInput mb-3"
+                           placeholder="Enter commando...">
+
+                    <button class="btn btn-success searchBtn w-100" id="searchBtn">
+                        GO!
+                    </button>
+                    
+                    <div class="d-flex gap-2 mt-3">
+                        <button class="btn btn-outline-primary w-50" id="sortNewest">Sorteer: Recentste</button>
+                        <button class="btn btn-outline-secondary w-50" id="sortOldest">Sorteer: Oudste</button>
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Start your commando with "/[character] [zoekopdracht]"</small>
+        </div>
+    </div>
+
+    <h2 class="mb-3">History</h2>
+    <div class="row" id="historyContainer"></div>
+
+</div>
+
+<script src="scripts/js-bootstrap/bootstrap.bundle.min.js"></script>
+<script src="scripts/my_internet_startpage.js"></script>
+
+</body>
+</html>

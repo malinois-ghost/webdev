@@ -187,6 +187,13 @@ const labs = [
             { name: "Colorpicker Pro", url: "labo_21/colorpicker_pro.html" },
         ]
     },
+    {
+        course: "Web Development 1",
+        title: "Labo 22",
+        projects: [
+            { name: "My internet startpage", url: "labo_22/my_internet_startpage.html" },
+        ]
+    },
 ];
 
 let courseQuery  = "";
