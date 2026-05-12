@@ -150,6 +150,7 @@ const deleteOne = (id) => {
 const clearAll = () => {
     localStorage.removeItem('chatMessages');
     allMessages = [];
+    saveMessages();
     renderMessages();
 }
 
@@ -167,15 +168,21 @@ const setup = () => {
     clearAllButton.addEventListener('click', clearAll);
 
     document.addEventListener('keydown', (enter) => {
-        if (enter.key === 'Enter') send();
+        if (enter.key === 'Enter'){
+            send();
+        }
     });
 
     document.addEventListener('keydown', (del) => {
-        if (del.key === 'Delete') clearAll();
+        if (del.key === 'Delete') {
+            clearAll();
+        }
     });
 
     document.addEventListener('keydown', (esc) => {
-        if (esc.key === 'Escape') deleteLast();
+        if (esc.key === 'Escape') {
+            deleteLast();
+        }
     });
 
     userSelect.addEventListener('change', (e) => {
