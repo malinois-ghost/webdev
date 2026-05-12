@@ -186,6 +186,8 @@ const setup = () => {
     saveUser();
     loadMessages();
 
+    setInterval(loadMessages, 500);
+
     document.querySelector('#message-input').focus();
 }
 
