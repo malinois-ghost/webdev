@@ -1,0 +1,101 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color:rgba(199, 0, 206, 0.466);
+}
+
+.chat-container {
+    width: 400px;
+    background-color: #fff;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+.chat-box {
+    height: 500px;
+    overflow-y: auto;
+    border-top: 1px dotted #aaa;
+    border-bottom: 1px dotted #aaa;
+    margin-bottom: 10px;
+    padding: 15px 5px;
+}
+
+.chat-box .message {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #dbdeff;
+    text-align: left;
+    width: 80%;
+}
+
+.chat-box .message.same-user {
+    background-color: #dcf8c6;
+    text-align: right;
+    margin-left: 15%;
+}
+
+.chat-box .sender {
+    display: block;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.chat-box .timestamp {
+    display: block;
+    font-size: 0.8em;
+    color: #888;
+    border-bottom: 1px dotted #3d3d3d;
+    margin-bottom: 0.8em;
+}
+
+label {
+    display: none;
+}
+
+#message-input {
+    width: calc(100% - 15px);
+    padding: 5px;
+    margin: 5px 0;
+}
+
+select {
+    width: 100%;
+    font-size: 1.1em;
+    border-radius: 15px;
+    padding: 0 5px;
+    margin-bottom: 1em;
+}
+
+button {
+    padding: 5px 10px;
+}
+
+button#clear-all {
+    float: right;
+    opacity: 0.8;
+}
+
+.sender button {
+    background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDE0IDE0Ij4KICA8cGF0aCBkPSJNMTIuMzQxIDMuNjU5bC0xLjQxMS0xLjQxMS00LjkyOSA0LjkyOS00LjkyOS00LjkyOS0xLjQxMSAxLjQxMSA0LjkyOSA0LjkyOS00LjkyOSA0LjkyOSAxLjQxMSAxLjQxMSA0LjkyOS00LjkyOSA0LjkyOSA0LjkyOSAxLjQxMS0xLjQxMS00LjkyOS00LjkyOSA0LjkyOS00LjkyOXoiLz4KPC9zdmc+Cg==) no-repeat center;
+    height: 20px;
+    width: 20px;
+    float: left;
+    border: none;
+    transition: transform 0.3s ease-in-out;
+}
+
+.sender button:hover {
+    transform: rotate(360deg);
+    cursor: pointer;
+}
+
+.sender button:active {
+    background-image: url('data:image/svg+xml;base64,CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCI+CiAgPHBhdGggZD0iTTEyLjM0MSAzLjY1OUwxMC45IDIuMjE4IDcgNi4xMSAzLjEgMi4yMTggMS42NTkgMy42NTkgNS41NTEgNy41NSAxLjY1OSAxMS40NDEgMy4xIDEyLjg4MiA3IDguOTlsMy45IDMuODkyIDEuNDQxLTEuNDQxLTMuODkyLTMuODkxeiIgZmlsbD0iIzgwODA4MCIvPgo8L3N2Zz4K');
+}
